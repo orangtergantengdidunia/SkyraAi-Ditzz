@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark" data-accent="violet" data-anim="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06060c">
+<meta name="description" content="ALIGHT MOTION PRESET PLAYER PRO — Discover • Preview • Organize • Create">
+<title>ALIGHT MOTION PRESET PLAYER PRO</title>
+<style>
+:root{--r:18px;--card-min:200px;--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px);--sbw:256px;--font:Inter,"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif}
+html[data-theme=dark]{--bg:#06060c;--bg2:#0d0d19;--panel:rgba(14,14,26,.78);--card:rgba(255,255,255,.045);--cardh:rgba(255,255,255,.085);--bd:rgba(255,255,255,.09);--tx:#eceeff;--mu:#9b9eba;--shadow:0 10px 40px rgba(0,0,0,.45);--inp:rgba(255,255,255,.06);color-scheme:dark}
+html[data-theme=light]{--bg:#f3f4fb;--bg2:#ffffff;--panel:rgba(255,255,255,.82);--card:#ffffff;--cardh:#eef0fa;--bd:rgba(20,20,60,.1);--tx:#171a33;--mu:#62668a;--shadow:0 10px 30px rgba(40,40,100,.12);--inp:rgba(20,20,60,.05);color-scheme:light}
+html[data-accent=violet]{--a:#8b5cf6;--b:#38bdf8}
+html[data-accent=blue]{--a:#3b82f6;--b:#22d3ee}
+html[data-accent=pink]{--a:#ec4899;--b:#8b5cf6}
+html[data-accent=green]{--a:#10b981;--b:#38bdf8}
+html[data-accent=orange]{--a:#f59e0b;--b:#ef4444}
+:root{--grad:linear-gradient(135deg,var(--a),var(--b));--ok:#22c55e;--warn:#f59e0b;--err:#ef4444}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--tx);line-height:1.5;min-height:100vh;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 500px at 10% -10%,color-mix(in srgb,var(--a) 22%,transparent),transparent 60%),radial-gradient(800px 500px at 100% 10%,color-mix(in srgb,var(--b) 16%,transparent),transparent 60%)}
+h1,h2,h3,p{margin:0}
+h1{font-size:clamp(1.4rem,3.4vw,2rem);line-height:1.15;letter-spacing:-.01em}
+h2{font-size:1.15rem}
+h3{font-size:.95rem;font-weight:650}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:var(--b)}
+.muted{color:var(--mu)}.sm{font-size:.82rem}.xs{font-size:.74rem}
+.ic{flex:none;vertical-align:middle}
+.grad-t{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+:focus-visible{outline:2px solid var(--b);outline-offset:2px}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:8px}
+
+/* boot */
+.boot{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center;transition:opacity .45s,visibility .45s}
+.boot.hide{opacity:0;visibility:hidden}
+.boot-in{display:grid;gap:16px;justify-items:center;text-align:center}
+.boot .logo{width:64px;height:64px;border-radius:20px;animation:pulse 1.4s ease-in-out infinite}
+.bar{width:160px;height:4px;border-radius:4px;background:var(--bd);overflow:hidden}
+.bar i{display:block;height:100%;width:40%;background:var(--grad);border-radius:4px;animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-100%)}100%{transform:translateX(260%)}}
+@keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 40px -4px var(--a)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes drift{0%{transform:translate(-6%,-4%) rotate(0)}100%{transform:translate(6%,5%) rotate(14deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* layout */
+.app{display:grid;grid-template-columns:var(--sbw) minmax(0,1fr);min-height:100vh;transition:grid-template-columns .25s}
+.app.collapsed{--sbw:78px}
+.sidebar{position:sticky;top:0;height:100vh;padding:18px 14px;display:flex;flex-direction:column;gap:14px;background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-right:1px solid var(--bd);z-index:30;overflow-y:auto;overflow-x:hidden}
+.brand{display:flex;align-items:center;gap:11px;padding:2px 4px;cursor:pointer;min-height:44px}
+.logo{width:40px;height:40px;border-radius:13px;background:var(--grad);display:grid;place-items:center;color:#fff;flex:none;box-shadow:0 8px 26px -8px var(--a)}
+.brand b{display:block;font-size:.74rem;letter-spacing:.07em;line-height:1.2}
+.brand small{color:var(--mu);font-size:.68rem}
+.nav{display:flex;flex-direction:column;gap:3px;flex:1}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;padding:11px 12px;border:0;border-radius:13px;background:transparent;color:var(--mu);text-align:left;font-size:.9rem;font-weight:550;transition:.2s;position:relative;min-height:44px}
+.nav button:hover{background:var(--cardh);color:var(--tx)}
+.nav button.active{background:color-mix(in srgb,var(--a) 20%,transparent);color:var(--tx)}
+.nav button.active::before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:3px;border-radius:3px;background:var(--grad)}
+.nav .cnt{margin-left:auto;font-size:.7rem;background:var(--grad);color:#fff;border-radius:999px;padding:1px 7px;font-weight:700}
+.collapsed .nav .l,.collapsed .brand .bt,.collapsed .nav .cnt,.collapsed .sb-foot .l{display:none}
+.collapsed .nav button{justify-content:center;padding:11px 0}
+.collapsed .nav button.active::before{left:-14px}
+.sb-foot{display:flex;flex-direction:column;gap:6px}
+.main{min-width:0}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:12px clamp(14px,3vw,28px);padding-top:calc(12px + var(--safe-t));background:var(--panel);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--bd)}
+.top-brand{display:none;align-items:center;gap:8px;font-weight:800;font-size:.8rem;letter-spacing:.05em}
+.top-brand .logo{width:34px;height:34px;border-radius:11px}
+.search{position:relative;flex:1;max-width:560px}
+.search .ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none}
+.search input{padding-left:40px;padding-right:38px;height:44px;border-radius:14px}
+.search .clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:10px;border:0;background:transparent;display:none;place-items:center;color:var(--mu)}
+.search.has .clr{display:grid}
+.top-act{display:flex;gap:8px;margin-left:auto}
+#view{padding:clamp(14px,3vw,28px);max-width:1500px;margin:0 auto}
+#view.enter{animation:rise .35s ease both}
+.page{display:flex;flex-direction:column;gap:22px}
+.page-h{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.sec-h{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}
+.bottom-nav{display:none;position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--panel);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--bd);padding:6px 8px calc(6px + var(--safe-b));justify-content:space-around}
+.bottom-nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:transparent;color:var(--mu);font-size:.66rem;padding:6px 2px;border-radius:12px;min-height:50px;max-width:90px}
+.bottom-nav button.active{color:var(--tx);background:color-mix(in srgb,var(--a) 20%,transparent)}
+@media(max-width:860px){
+ .app{grid-template-columns:minmax(0,1fr)}.sidebar{display:none}.bottom-nav{display:flex}.top-brand{display:flex}
+ #view{padding-bottom:calc(100px + var(--safe-b))}
+ .top-act .hide-m{display:none}
+ .search{max-width:none}
+ .top-brand span{display:none}
+}
+
+/* ui */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:18px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border-radius:13px;border:1px solid var(--bd);background:var(--card);font-weight:600;font-size:.9rem;transition:.2s;white-space:nowrap;text-decoration:none;color:var(--tx)}
+.btn:hover{background:var(--cardh);transform:translateY(-1px)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 8px 24px -10px var(--a)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.danger{background:color-mix(in srgb,var(--err) 18%,transparent);border-color:color-mix(in srgb,var(--err) 45%,transparent);color:#ff8a8a}
+html[data-theme=light] .btn.danger{color:#c01818}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:36px;padding:0 12px;font-size:.82rem;border-radius:11px}
+.btn[disabled],.btn.off{opacity:.45;cursor:not-allowed;transform:none}
+.icon-btn{width:44px;height:44px;border-radius:13px;border:1px solid var(--bd);background:var(--card);display:inline-grid;place-items:center;transition:.2s;flex:none}
+.icon-btn:hover{background:var(--cardh)}
+.icon-btn.sm{width:36px;height:36px;border-radius:11px}
+.icon-btn.on{color:#ff5c8a;border-color:#ff5c8a55}
+.icon-btn.danger:hover{color:var(--err)}
+.input,select.input,textarea.input{width:100%;background:var(--inp);border:1px solid var(--bd);color:var(--tx);border-radius:12px;padding:10px 13px;font:inherit;min-height:44px;transition:.2s}
+textarea.input{resize:vertical;min-height:84px}
+.input:focus{outline:none;border-color:var(--a);box-shadow:0 0 0 3px color-mix(in srgb,var(--a) 25%,transparent)}
+select.input option{background:var(--bg2);color:var(--tx)}
+.fld{display:flex;flex-direction:column;gap:5px;font-size:.78rem;color:var(--mu);font-weight:600;min-width:0}
+.form{display:flex;flex-direction:column;gap:13px}
+.err{color:var(--err);font-size:.84rem;min-height:1em}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:var(--card);border:1px solid var(--bd);font-size:.8rem;font-weight:600;color:var(--tx);cursor:pointer;transition:.2s}
+.chip:hover{border-color:var(--a)}
+.chip.on{background:color-mix(in srgb,var(--a) 22%,transparent);border-color:var(--a)}
+.chip b{color:var(--mu);font-weight:700}
+.tag{font-size:.7rem;color:var(--b);background:color-mix(in srgb,var(--b) 12%,transparent);padding:2px 8px;border-radius:999px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.badge{position:absolute;top:9px;left:9px;font-size:.66rem;font-weight:800;letter-spacing:.05em;padding:3px 8px;border-radius:8px;background:rgba(0,0,0,.6);color:#fff;backdrop-filter:blur(6px);z-index:2}
+.badge.demo{left:auto;right:auto;top:auto;bottom:9px;background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.seg{display:inline-flex;background:var(--inp);border:1px solid var(--bd);border-radius:13px;padding:3px}
+.seg button{border:0;background:transparent;padding:0 12px;min-height:36px;border-radius:10px;color:var(--mu);display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:.82rem;font-weight:600}
+.seg.big button{min-height:44px;padding:0 16px;font-size:.88rem}
+.mono{font-family:ui-monospace,SFMono-Regular,Consolas,"Courier New",monospace;font-size:.84rem}
+textarea.mono{line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;tab-size:2}
+.pre-out{max-height:50vh;overflow:auto;white-space:pre;font-family:ui-monospace,Consolas,"Courier New",monospace;background:var(--inp);border:1px solid var(--bd);border-radius:12px;padding:12px;font-size:.78rem;line-height:1.5;margin:0}
+.meta-grid .full{grid-column:1/-1}
+.kvlist{display:flex;flex-wrap:wrap;gap:6px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.seg button.on{background:var(--grad);color:#fff}
+.switch{position:relative;display:inline-block;width:48px;height:28px;flex:none}
+.switch input{opacity:0;position:absolute;inset:0;margin:0;cursor:pointer;z-index:2}
+.switch span{position:absolute;inset:0;background:var(--inp);border:1px solid var(--bd);border-radius:999px;transition:.2s}
+.switch span::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:var(--mu);transition:.2s}
+.switch input:checked+span{background:var(--grad);border-color:transparent}
+.switch input:checked+span::after{transform:translateX(20px);background:#fff}
+input[type=range]{accent-color:var(--a);width:100%;min-height:28px;margin:0}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--bd);border-top-color:var(--a);animation:spin .8s linear infinite;display:inline-block}
+.notice{display:flex;gap:10px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--b) 10%,transparent);border:1px solid color-mix(in srgb,var(--b) 30%,transparent);font-size:.86rem}
+.notice.warn{background:color-mix(in srgb,var(--warn) 12%,transparent);border-color:color-mix(in srgb,var(--warn) 40%,transparent)}
+.notice.bad{background:color-mix(in srgb,var(--err) 12%,transparent);border-color:color-mix(in srgb,var(--err) 40%,transparent)}
+.notice ul{margin:4px 0 0;padding-left:18px}
+
+/* thumbs */
+.vis{position:absolute;inset:0;overflow:hidden;background:linear-gradient(135deg,hsl(var(--h) 75% 24%),hsl(calc(var(--h) + 55) 80% 11%))}
+.vis::before{content:"";position:absolute;inset:-30%;background:radial-gradient(circle at 28% 30%,hsl(var(--h) 100% 66%/.55),transparent 42%),radial-gradient(circle at 76% 72%,hsl(calc(var(--h) + 60) 100% 62%/.45),transparent 40%);animation:drift 9s ease-in-out infinite alternate}
+.vis-ic{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.82)}
+.vis img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.vis.has-img::before,.vis.has-img .vis-ic{display:none}
+.pcard{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s;display:flex;flex-direction:column;min-width:0}
+.pcard:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--a) 60%,transparent);box-shadow:0 18px 40px -18px var(--a)}
+.thumb{position:relative;aspect-ratio:16/10;overflow:hidden}
+.thumb .fav,.thumb .play{position:absolute;z-index:3;width:38px;height:38px;border-radius:12px;border:0;display:grid;place-items:center;background:rgba(0,0,0,.55);color:#fff;backdrop-filter:blur(6px);transition:.2s}
+.thumb .fav{top:8px;right:8px}
+.thumb .fav.on{color:#ff5c8a}
+.thumb .play{right:8px;bottom:8px;background:var(--grad);opacity:0;transform:scale(.85)}
+.pcard:hover .play,.pcard:focus-within .play{opacity:1;transform:none}
+@media(hover:none){.thumb .play{opacity:1;transform:none}}
+.pbody{padding:12px 13px 8px;display:flex;flex-direction:column;gap:6px;flex:1}
+.pbody h3{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pact{display:flex;gap:4px;padding:2px 8px 10px;justify-content:flex-end}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--card-min),1fr));gap:14px}
+.hrow{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 10px}
+.hrow>.pcard{flex:0 0 min(230px,72vw);scroll-snap-align:start}
+.plist{display:flex;flex-direction:column;gap:10px}
+.prow{display:grid;grid-template-columns:132px minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:8px;cursor:pointer;transition:.2s}
+.prow:hover{border-color:var(--a)}
+.prow .thumb{border-radius:11px}
+.prow .meta{min-width:0;display:flex;flex-direction:column;gap:4px}
+.prow .meta h3{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .pact{padding:0 4px;flex-wrap:wrap}
+@media(max-width:620px){.prow{grid-template-columns:96px minmax(0,1fr)}.prow .pact{grid-column:1/-1;justify-content:flex-start;padding:0 4px 4px}}
+
+/* hero + stats */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:22px;padding:clamp(18px,3vw,32px);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-80px;top:-80px;width:320px;height:320px;border-radius:50%;background:var(--grad);filter:blur(90px);opacity:.25;pointer-events:none}
+.hero-t{display:flex;flex-direction:column;gap:14px;justify-content:center;position:relative;z-index:1}
+.hero-t h1{font-size:clamp(1.6rem,4.4vw,2.7rem);letter-spacing:.01em;font-weight:850}
+.eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--b)}
+.hero-a{display:flex;gap:10px;flex-wrap:wrap}
+.hero-f{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/10;cursor:pointer;z-index:1;border:1px solid var(--bd);min-height:160px}
+.hero-f .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.78));z-index:2;color:#fff}
+.hero-f .cap .eyebrow{color:#9fe3ff}
+@media(max-width:860px){.hero{grid-template-columns:1fr}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{padding:16px;display:flex;align-items:center;gap:13px;cursor:pointer;transition:.2s}
+.stat:hover{border-color:var(--a)}
+.stat .si{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,var(--a) 20%,transparent);color:var(--b)}
+.stat b{font-size:1.5rem;line-height:1;display:block}
+.cats{display:flex;flex-wrap:wrap;gap:8px}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:44px 20px;border:1px dashed var(--bd);border-radius:var(--r);background:var(--card)}
+.empty .ei{width:72px;height:72px;border-radius:22px;display:grid;place-items:center;background:color-mix(in srgb,var(--a) 18%,transparent);color:var(--b)}
+.empty p{max-width:440px;color:var(--mu);font-size:.92rem}
+.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding:14px}
+.filters .fld{flex:1 1 150px}
+
+/* player */
+.player-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+@media(max-width:1100px){.player-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-height:520px) and (orientation:landscape){.player-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}.bottom-nav button span{display:none}.bottom-nav button{min-height:40px}}
+.stage{position:relative;background:#000;border-radius:var(--r);overflow:hidden;aspect-ratio:16/9;max-height:74vh;width:100%;display:grid;place-items:center;border:1px solid var(--bd);box-shadow:var(--shadow)}
+.stage:fullscreen{aspect-ratio:auto;max-height:none;border-radius:0;border:0}
+.stage:-webkit-full-screen{aspect-ratio:auto;max-height:none;border-radius:0}
+.stage video,.stage img.pv{width:100%;height:100%;object-fit:contain;display:block;background:#000}
+.stage-ov{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:20px;z-index:3}
+.stage-ov.show{display:grid}
+.stage-ov .box{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:420px;position:relative;z-index:2;color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6)}
+.stage-ov.ph{background:transparent}
+.stage-ov.ld{background:rgba(0,0,0,.35)}
+.stage-ov.er{background:rgba(0,0,0,.72)}
+.ph-badge{font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;border-radius:12px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.25);font-size:.9rem}
+.bigplay{position:absolute;z-index:2;width:72px;height:72px;border-radius:50%;border:0;background:var(--grad);color:#fff;display:none;place-items:center;box-shadow:0 10px 40px -6px var(--a)}
+.stage.paused .bigplay{display:grid}
+.ctrl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px;margin-top:12px}
+.seek{flex:1 1 100%;display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-size:.8rem;color:var(--mu)}
+.vol{display:flex;align-items:center;gap:6px;width:150px}
+.ctrl .sp{flex:1}
+.ctrl select{width:auto;min-height:44px}
+.pl-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.side{display:flex;flex-direction:column;gap:14px}
+.mini{display:grid;grid-template-columns:64px minmax(0,1fr);gap:10px;align-items:center;padding:6px;border-radius:12px;cursor:pointer}
+.mini:hover{background:var(--cardh)}
+.mini .thumb{border-radius:9px}
+.mini h3{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.86rem}
+
+/* detail */
+.detail{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:20px;align-items:start}
+@media(max-width:960px){.detail{grid-template-columns:minmax(0,1fr)}}
+.detail .thumb{border-radius:var(--r);aspect-ratio:16/10}
+.meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.meta-grid>div{background:var(--inp);border:1px solid var(--bd);border-radius:12px;padding:9px 12px;min-width:0}
+.meta-grid>div>span:first-child{display:block;font-size:.7rem;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.meta-grid b{font-size:.9rem;word-break:break-word;font-weight:600}
+.steps{margin:6px 0 0;padding-left:20px;color:var(--mu);font-size:.88rem;display:grid;gap:4px}
+
+/* tables */
+.tablewrap{overflow:auto}
+.ftable{width:100%;border-collapse:collapse;font-size:.88rem}
+.ftable th{text-align:left;font-size:.72rem;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;padding:12px 14px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.ftable td{padding:11px 14px;border-bottom:1px solid var(--bd);vertical-align:middle}
+.ftable tr:last-child td{border-bottom:0}
+.ftable .nm{min-width:180px;max-width:320px;word-break:break-word}
+.ftable .acts{display:flex;gap:4px;justify-content:flex-end}
+.st{display:inline-flex;gap:6px;align-items:center;padding:3px 10px;border-radius:999px;font-size:.74rem;font-weight:700;background:var(--inp)}
+.st.ok{color:var(--ok)}.st.bad{color:var(--err)}.st.mu{color:var(--mu)}.st.warn{color:var(--warn)}
+@media(max-width:760px){.ftable thead{display:none}.ftable tr{display:block;padding:10px 6px;border-bottom:1px solid var(--bd)}.ftable td{display:flex;justify-content:space-between;gap:10px;border:0;padding:5px 10px}.ftable td::before{content:attr(data-l);color:var(--mu);font-size:.72rem;font-weight:700;text-transform:uppercase}.ftable td.nm{display:block;max-width:none}.ftable td.nm::before{display:none}}
+
+/* import */
+.drop{border:2px dashed var(--bd);border-radius:var(--r);padding:34px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--card);cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--a);background:color-mix(in srgb,var(--a) 10%,transparent)}
+.stg{display:grid;grid-template-columns:150px minmax(0,1fr);gap:16px;padding:14px}
+@media(max-width:700px){.stg{grid-template-columns:1fr}}
+.stg .thumb{border-radius:12px}
+.stg-f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stg-f .wide{grid-column:1/-1}
+@media(max-width:700px){.stg-f{grid-template-columns:1fr}}
+.prog{height:8px;border-radius:8px;background:var(--bd);overflow:hidden}
+.prog i{display:block;height:100%;background:var(--grad);width:0;transition:width .2s}
+.qr-box{position:relative;border-radius:var(--r);overflow:hidden;background:#000;aspect-ratio:4/3;max-width:460px;display:grid;place-items:center;border:1px solid var(--bd)}
+.qr-box video,.qr-box img{width:100%;height:100%;object-fit:contain}
+.qr-frame{position:absolute;inset:18%;border:3px solid var(--b);border-radius:18px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media(max-width:900px){.two{grid-template-columns:1fr}}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--bd)}
+.set-row:last-child{border-bottom:0}
+.set-row .t{min-width:0}
+.set-row .t b{display:block;font-size:.92rem}
+.set-row .ctl{flex:none;display:flex;align-items:center;gap:8px;min-width:0}
+.sw-color{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;padding:0}
+.sw-color.on{border-color:var(--tx)}
+.kbd{display:inline-block;min-width:26px;text-align:center;padding:2px 8px;border-radius:8px;background:var(--inp);border:1px solid var(--bd);font-family:ui-monospace,Consolas,monospace;font-size:.8rem}
+.klist{display:grid;gap:8px}
+.klist div{display:flex;justify-content:space-between;gap:12px;align-items:center}
+
+/* toast + modal */
+#toasts{position:fixed;right:16px;bottom:calc(16px + var(--safe-b));z-index:120;display:flex;flex-direction:column;gap:8px;max-width:min(380px,calc(100vw - 32px));pointer-events:none}
+@media(max-width:860px){#toasts{right:12px;left:12px;max-width:none;bottom:calc(84px + var(--safe-b))}}
+.toast{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--bg2);border:1px solid var(--bd);box-shadow:var(--shadow);font-size:.88rem;animation:rise .25s both;pointer-events:auto;border-left:4px solid var(--b)}
+.toast.success{border-left-color:var(--ok)}.toast.error{border-left-color:var(--err)}.toast.warn{border-left-color:var(--warn)}
+.toast .ti{margin-top:1px}
+.toast.out{opacity:0;transform:translateX(20px);transition:.25s}
+.modal-wrap{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;animation:fade .18s both}
+.modal-wrap.out{opacity:0;transition:.16s}
+.modal{background:var(--bg2);border:1px solid var(--bd);border-radius:22px;width:min(520px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column;box-shadow:var(--shadow);animation:rise .22s both}
+.modal.wide{width:min(720px,100%)}
+.modal-h{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px 8px}
+.modal-b{overflow:auto;padding:6px 20px 18px;font-size:.92rem}
+.modal-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px calc(16px + var(--safe-b));border-top:1px solid var(--bd);flex-wrap:wrap}
+@media(max-width:620px){.modal-wrap.sheet{place-items:end center;padding:0}.modal-wrap.sheet .modal{border-radius:22px 22px 0 0;width:100%}}
+.more-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.more-grid button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:14px;border:1px solid var(--bd);background:var(--card);font-size:.78rem;min-height:76px}
+html[data-anim=off] *,html[data-anim=off] *::before,html[data-anim=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="boot" id="boot"><div class="boot-in"><div class="logo" id="boot-logo"></div><div><b style="letter-spacing:.08em;font-size:.85rem">ALIGHT MOTION PRESET PLAYER PRO</b><div class="muted xs" style="margin-top:4px">Discover • Preview • Organize • Create</div></div><div class="bar"><i></i></div></div></div>
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar" aria-label="Navigasi utama"></aside>
+  <div class="main">
+    <header class="topbar">
+      <div class="top-brand" data-act="go" data-go="home"><div class="logo" id="top-logo"></div><span>ALIGHT PRO</span></div>
+      <div class="search" id="searchbox">
+        <span id="search-ic"></span>
+        <input class="input" id="gsearch" type="search" placeholder="Cari preset, pembuat, kategori, tag…" autocomplete="off" aria-label="Cari preset">
+        <button class="clr" id="sclr" data-act="search-clear" aria-label="Hapus pencarian" title="Hapus pencarian"></button>
+      </div>
+      <div class="top-act" id="top-act"></div>
+    </header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+  <nav class="bottom-nav" id="bottomnav" aria-label="Navigasi bawah"></nav>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<input type="file" id="f-import" hidden multiple data-in="imp-files">
+<input type="file" id="f-prev" hidden data-in="imp-prevfile">
+<input type="file" id="f-json" hidden accept="application/json,.json" data-in="set-json">
+<input type="file" id="f-qr" hidden accept="image/*" data-in="qr-file">
+<input type="file" id="f-xml" hidden accept=".xml,application/xml,text/xml" data-in="px-file">
+
+<script>
+(()=>{'use strict';
+/* ============ util ============ */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const fmtSize=b=>b==null?'Tidak diketahui':b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':b<1073741824?(b/1048576).toFixed(1)+' MB':(b/1073741824).toFixed(2)+' GB';
+const fmtTime=s=>{if(s==null||!isFinite(s))return '0:00';s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const fmtDate=t=>t?new Date(t).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'—';
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const IC={
+home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+library:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+play:'<path d="M7 4.5v15l13-7.5z"/>',pause:'<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',
+heart:'<path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3 5 6.5 5c2 0 3.5 1 5.5 3 2-2 3.5-3 5.5-3C21 5 22.8 8.6 21.5 11.8 19.5 16.4 12 21 12 21z"/>',
+clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+upload:'<path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>',
+qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h3M20 17v4"/>',
+folder:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+settings:'<path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/>',search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+x:'<path d="M6 6l12 12M18 6 6 18"/>',plus:'<path d="M12 5v14M5 12h14"/>',trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',download:'<path d="M12 4v12m0 0 5-5m-5 5-5-5M4 20h16"/>',
+share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 10.7 6.8-4.4M8.6 13.3l6.8 4.4"/>',
+link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',next:'<path d="M5 5v14l10-7zM19 5v14"/>',prev:'<path d="M19 5v14L9 12zM5 5v14"/>',
+repeat:'<path d="M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/>',
+volume:'<path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>',mute:'<path d="M4 9v6h4l5 4V5L8 9zM17 9l5 6M22 9l-5 6"/>',
+fullscreen:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',back:'<path d="m15 5-7 7 7 7"/>',
+star:'<path d="m12 3 2.8 5.8 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.3l1.1-6.2L3 9.7l6.2-.9z"/>',
+sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',
+more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>',check:'<path d="m5 12 5 5 9-10"/>',
+alert:'<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17v.01"/>',up:'<path d="m6 15 6-6 6 6"/>',down:'<path d="m6 9 6 6 6-6"/>',
+rows:'<path d="M4 6h16M4 12h16M4 18h16"/>',sparkles:'<path d="M12 3l1.8 4.7L18.5 9.5 13.8 11.3 12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+film:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4M17 9h4M3 15h4M17 15h4"/>',
+camera:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',
+refresh:'<path d="M20 11a8 8 0 0 0-14.5-4M4 5v4h4M4 13a8 8 0 0 0 14.5 4M20 19v-4h-4"/>',external:'<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+file:'<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/>',keyboard:'<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',
+back5:'<path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/>',fwd5:'<path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/>',
+clipboard:'<rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/>',
+eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+code:'<path d="m8 8-4 4 4 4M16 8l4 4-4 4M14 4l-4 16"/>'};
+const FILLED=new Set(['play','pause']);
+const ic=(n,s=20)=>{const f=FILLED.has(n);return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="${f?0:1.9}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]||''}</svg>`};
+
+/* ============ konstanta ============ */
+const CATS=['Velocity','Shake','Smooth','Beat Sync','3D Zoom','Blur','Glow','Flash','Cinematic','Slow Motion','Transition','Color Grading','CC Preset','Typography','AMV','XML Preset','QR Code Preset','Custom Preset'];
+const catHue=c=>{const i=CATS.indexOf(c);return ((i<0?0:i)*21+250)%360};
+const VIDEO_EXT=['mp4','webm','mov','m4v'],IMG_EXT=['png','jpg','jpeg','gif','webp'],AUDIO_EXT=['mp3','wav','ogg','m4a'];
+const BLOCK_EXT=['exe','apk','bat','cmd','sh','js','mjs','html','htm','svg','php','jar','msi','dll','vbs','ps1','scr','com','lnk','xhtml'];
+const MIME={mp4:'video/mp4',webm:'video/webm',mov:'video/quicktime',m4v:'video/x-m4v',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',mp3:'audio/mpeg',wav:'audio/wav',ogg:'audio/ogg',m4a:'audio/mp4',xml:'application/xml',zip:'application/zip'};
+const MAX_FILE=300*1024*1024,WARN_FILE=100*1024*1024,MAX_STAGE=30;
+const extOf=n=>{const m=/\.([a-z0-9]+)$/i.exec(n||'');return m?m[1].toLowerCase():''};
+const groupOf=e=>VIDEO_EXT.includes(e)?'video':IMG_EXT.includes(e)?'image':AUDIO_EXT.includes(e)?'audio':e==='xml'?'xml':e==='zip'?'zip':e==='alightmotion'?'project':'other';
+const GROUP_LABEL={video:'Video',image:'Gambar',audio:'Audio',xml:'XML',zip:'ZIP',project:'Proyek Alight Motion',other:'Lainnya',link:'Tautan',demo:'Data demo'};
+const groupOfPreset=p=>p.demo?'demo':p.kind==='link'?'link':groupOf(p.ext);
+const fmtLabel=p=>p.demo?'DEMO':p.kind==='link'?'LINK':(p.ext||'FILE').toUpperCase();
+const sourceLabel=p=>p.demo?'Data demo':p.kind==='link'?'Link':p.kind==='xml'?'XML Tempelan':'File Lokal';
+const LINK_LABEL={'alight-share':'Link Berbagi Alight Motion','alight-other':'Tautan situs Alight Creative',web:'Tautan web'};
+const safeName=n=>String(n||'file').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').slice(0,150);
+const withType=(f,ext)=>f.type?f:new Blob([f],{type:MIME[ext]||''});
+const safeUrl=u=>{try{const x=new URL(String(u).trim());return ['http:','https:'].includes(x.protocol)?x.href:null}catch{return null}};
+const parseTags=s=>[...new Set(String(s||'').split(/[,\n]/).map(t=>t.trim().replace(/^#+/,'').slice(0,24)).filter(Boolean))].slice(0,12);
+const DEFAULTS={theme:'dark',accent:'violet',grid:'m',autoplay:false,volume:0.8,speed:1,anim:true,collapsed:false,repeatQueue:false};
+const ROUTES={home:'Home',library:'Preset Library',player:'Player',favorites:'Favorites',recent:'Recent',queue:'Queue',import:'Import Preset',qr:'QR Scanner',paste:'Tempel Preset',files:'File Manager',settings:'Settings',about:'About',detail:'Detail Preset'};
+const NAV=[['home','home'],['library','library'],['player','play'],['favorites','heart'],['recent','clock'],['queue','list'],['import','upload'],['qr','qr'],['paste','clipboard'],['files','folder'],['settings','settings'],['about','info']];
+const BOTTOM=['home','library','player','queue','more'];
+
+/* ============ storage ============ */
+const LS={
+ get(k,d){try{const v=localStorage.getItem('ampp.'+k);return v==null?d:JSON.parse(v)}catch{return d}},
+ set(k,v){try{localStorage.setItem('ampp.'+k,JSON.stringify(v));return true}catch(e){toast('Penyimpanan penuh atau tidak dapat diakses. Perubahan mungkin tidak tersimpan.','error');return false}},
+ del(k){try{localStorage.removeItem('ampp.'+k)}catch{}}};
+const DB={db:null,mem:new Map(),ok:false,
+ open(){return new Promise(res=>{try{if(!window.indexedDB)return res(false);const r=indexedDB.open('ampp-files',1);r.onupgradeneeded=()=>{r.result.createObjectStore('blobs')};r.onsuccess=()=>{this.db=r.result;this.ok=true;res(true)};r.onerror=()=>res(false);r.onblocked=()=>res(false)}catch(e){res(false)}})},
+ tx(mode,fn){return new Promise((res,rej)=>{try{const t=this.db.transaction('blobs',mode);const rq=fn(t.objectStore('blobs'));t.oncomplete=()=>res(rq?rq.result:undefined);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error||new Error('abort'))}catch(e){rej(e)}})},
+ async put(k,v){if(!this.db){this.mem.set(k,v);return}await this.tx('readwrite',s=>s.put(v,k))},
+ async get(k){if(!this.db)return this.mem.get(k)||null;return (await this.tx('readonly',s=>s.get(k)))||null},
+ async has(k){if(!this.db)return this.mem.has(k);return (await this.tx('readonly',s=>s.count(k)))>0},
+ async del(k){if(!this.db){this.mem.delete(k);return}await this.tx('readwrite',s=>s.delete(k))},
+ async clear(){this.mem.clear();if(this.db)await this.tx('readwrite',s=>s.clear())}};
+const URLS=new Map();
+async function blobURL(key){if(URLS.has(key))return URLS.get(key);const b=await DB.get(key);if(!b)return null;const u=URL.createObjectURL(b);URLS.set(key,u);return u}
+function dropURL(key){const u=URLS.get(key);if(u){URL.revokeObjectURL(u);URLS.delete(key)}}
+const isQuota=e=>e&&(e.name==='QuotaExceededError'||/quota/i.test(String(e.message)));
+
+/* ============ state ============ */
+const S={presets:[],settings:{...DEFAULTS},opened:[],played:[],queue:[],activeId:null,route:{name:'home',id:null},depth:0,
+ lib:{q:'',cat:'all',fmt:'all',sort:'new',view:'grid',page:1,fav:false},files:{sort:'new',type:'all',status:{}},
+ staged:[],busy:false,qr:{result:null,imgUrl:null,imgBlob:null,stream:null,timer:null,scanning:false,err:''},
+ player:{id:null,v:null,logged:false,loop:false,token:null}};
+const byId=id=>S.presets.find(p=>p.id===id)||null;
+const savePresets=()=>LS.set('presets',S.presets);
+const saveSettings=()=>LS.set('settings',S.settings);
+const saveLists=()=>{LS.set('opened',S.opened);LS.set('played',S.played);LS.set('queue',S.queue)};
+
+function safeUrlOrEmpty(u){return safeUrl(u)?String(u).trim():''}
+function sanitizePreset(o){
+ if(!o||typeof o!=='object')return null;
+ const str=(v,n)=>typeof v==='string'?v.slice(0,n):'';
+ const name=str(o.name,80).trim();if(!name)return null;
+ const num=v=>typeof v==='number'&&isFinite(v)&&v>=0?v:null;
+ return{id:/^[a-z0-9_-]{4,40}$/i.test(o.id||'')?o.id:uid(),name,creator:str(o.creator,60).trim()||null,
+  category:CATS.includes(o.category)?o.category:'Custom Preset',description:str(o.description,600),
+  tags:Array.isArray(o.tags)?o.tags.filter(t=>typeof t==='string').map(t=>t.trim().slice(0,24)).filter(Boolean).slice(0,12):[],
+  ext:str(o.ext,12).toLowerCase().replace(/[^a-z0-9]/g,''),prevExt:str(o.prevExt,12).toLowerCase().replace(/[^a-z0-9]/g,''),fileName:str(o.fileName,160),
+  size:num(o.size),resolution:/^\d{2,5}x\d{2,5}$/.test(o.resolution||'')?o.resolution:null,duration:num(o.duration),
+  added:num(o.added)||Date.now(),fav:!!o.fav,opens:Math.floor(num(o.opens)||0),plays:Math.floor(num(o.plays)||0),
+  demo:!!o.demo,kind:o.kind==='link'||o.kind==='xml'?o.kind:'file',sourceUrl:safeUrlOrEmpty(str(o.sourceUrl,2000)),linkType:['alight-share','alight-other','web'].includes(o.linkType)?o.linkType:'',pageTitle:str(o.pageTitle,200).trim()||null,
+  hasMain:!!o.hasMain,hasPrev:!!o.hasPrev,hasThumb:!!o.hasThumb}}
+
+const DEMO=[
+['Velocity Smooth','Velocity','Contoh entri kategori Velocity: perubahan kecepatan halus antar klip.',['velocity','smooth','edit']],
+['Shake Transition','Shake','Contoh entri kategori Shake: getaran singkat sebagai transisi.',['shake','transisi']],
+['Cinematic Color','Cinematic','Contoh entri bergaya sinematik dengan nuansa warna kontras.',['cinematic','warna']],
+['3D Zoom','3D Zoom','Contoh entri efek zoom berkesan kedalaman 3D.',['zoom','3d']],
+['Flash Beat','Flash','Contoh entri kilatan cahaya yang mengikuti ketukan.',['flash','beat']],
+['Motion Blur','Blur','Contoh entri blur gerak untuk perpindahan cepat.',['blur','motion']],
+['Glow Effect','Glow','Contoh entri cahaya lembut pada objek dan teks.',['glow','neon']],
+['Smooth Slow Motion','Slow Motion','Contoh entri perlambatan gerakan yang halus.',['slowmo','smooth']],
+['Beat Sync AMV','AMV','Contoh entri sinkronisasi ketukan untuk edit AMV.',['amv','beat sync']],
+['Typography Intro','Typography','Contoh entri animasi teks untuk intro.',['teks','intro']],
+['Blue CC','CC Preset','Contoh entri koreksi warna dominan biru.',['cc','biru']],
+['Velocity Shake Combo','Custom Preset','Contoh entri kombinasi velocity dan shake.',['velocity','shake','combo']],
+['Whip Transition','Transition','Contoh entri transisi cambuk antar adegan.',['transisi','whip']],
+['Warm Color Grade','Color Grading','Contoh entri grading warna hangat.',['grading','warm']]];
+function seedDemo(){const t=Date.now();return DEMO.map((d,i)=>sanitizePreset({id:'demo'+(i+1)+uid().slice(-4),name:d[0],category:d[1],description:d[2],tags:d[3],added:t-i,demo:true,creator:null,kind:'file'}))}
+
+/* ============ toast / modal ============ */
+function toast(msg,type='info'){const box=$('#toasts');if(!box)return;const t=document.createElement('div');t.className='toast '+type;t.setAttribute('role',type==='error'?'alert':'status');
+ t.innerHTML=`<span class="ti">${ic(type==='success'?'check':type==='error'||type==='warn'?'alert':'info',18)}</span><span>${esc(msg)}</span>`;
+ box.appendChild(t);while(box.children.length>4)box.firstChild.remove();
+ setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),260)},type==='error'?5600:3400)}
+let modalStack=[];
+function openModal({title,body,actions=[],wide=false,sheet=false,onMount}){
+ const wrap=document.createElement('div');wrap.className='modal-wrap'+(sheet?' sheet':'');
+ wrap.innerHTML=`<div class="modal ${wide?'wide':''}" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modal-h"><h2>${esc(title)}</h2><button class="icon-btn sm" data-mclose aria-label="Tutup">${ic('x',18)}</button></div><div class="modal-b">${body}</div>${actions.length?`<div class="modal-f">${actions.map((a,i)=>`<button class="btn ${a.cls||'ghost'}" data-mi="${i}">${esc(a.label)}</button>`).join('')}</div>`:''}</div>`;
+ const last=document.activeElement;let closed=false;
+ const api={wrap,onClose:null,close(v){if(closed)return;closed=true;wrap.classList.add('out');setTimeout(()=>wrap.remove(),170);modalStack=modalStack.filter(m=>m!==api);try{last&&last.focus&&last.focus()}catch{}api.onClose&&api.onClose(v)}};
+ wrap.addEventListener('mousedown',e=>{if(e.target===wrap)api.close()});
+ wrap.addEventListener('click',async e=>{
+  if(e.target.closest('[data-mclose]')){api.close();return}
+  const b=e.target.closest('[data-mi]');if(!b)return;const a=actions[+b.dataset.mi];if(b.disabled)return;b.disabled=true;
+  try{const r=await(a.run&&a.run(wrap,api.close));if(r!==false)api.close(true)}catch(err){console.error(err);toast('Terjadi kesalahan: '+(err&&err.message||err),'error')}finally{b.disabled=false}});
+ document.body.appendChild(wrap);modalStack.push(api);
+ const f=wrap.querySelector('input:not([type=file]),textarea,select,.btn.primary,.btn.danger');setTimeout(()=>{try{(f||wrap.querySelector('button')).focus()}catch{}},30);
+ onMount&&onMount(wrap);return api}
+const closeAllModals=()=>[...modalStack].forEach(m=>m.close());
+function confirmBox(title,msg,okLabel='Ya',danger=false){return new Promise(res=>{let ok=false;const m=openModal({title,body:`<p style="white-space:pre-line">${esc(msg)}</p>`,actions:[{label:'Batal'},{label:okLabel,cls:danger?'danger':'primary',run:()=>{ok=true}}]});m.onClose=()=>res(ok)})}
+async function copyText(t){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch{}
+ try{const ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;opacity:0;top:0';document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();return ok}catch{return false}}
+
+/* ============ komponen ============ */
+function visual(p){return `<div class="vis" style="--h:${catHue(p.category)}" data-thumb="${p.hasThumb?esc(p.id):''}"><span class="vis-ic">${ic('film',34)}</span></div>`}
+function hydrateThumbs(root=document){$$('[data-thumb]',root).forEach(async el=>{const id=el.dataset.thumb;if(!id||el.dataset.done)return;el.dataset.done='1';const u=await blobURL(id+':thumb').catch(()=>null);if(u&&el.isConnected){el.classList.add('has-img');const im=new Image();im.alt='';im.decoding='async';im.src=u;el.appendChild(im)}})}
+const actBtns=p=>`<button class="icon-btn sm" data-act="qadd" data-id="${p.id}" title="Tambah ke antrean" aria-label="Tambah ke antrean">${ic('list',16)}</button><button class="icon-btn sm" data-act="edit" data-id="${p.id}" title="Edit metadata" aria-label="Edit metadata">${ic('edit',16)}</button><button class="icon-btn sm danger" data-act="del" data-id="${p.id}" title="Hapus preset" aria-label="Hapus preset">${ic('trash',16)}</button>`;
+const thumbBlock=p=>`<div class="thumb">${visual(p)}<span class="badge">${esc(fmtLabel(p))}</span>${p.demo?'<span class="badge demo">DEMO</span>':''}<button class="fav ${p.fav?'on':''}" data-act="fav" data-id="${p.id}" aria-label="Favorit" title="Favorit">${ic('heart',18)}</button><button class="play" data-act="play" data-id="${p.id}" aria-label="Putar preview" title="Putar preview">${ic('play',18)}</button></div>`;
+function pcard(p){return `<article class="pcard" data-act="detail" data-id="${p.id}" tabindex="0" aria-label="${esc(p.name)}">${thumbBlock(p)}<div class="pbody"><h3 title="${esc(p.name)}">${esc(p.name)}</h3><p class="muted xs">${esc(p.category)} · ${esc(p.creator||'Pembuat tidak diketahui')}</p><div class="tags">${p.tags.slice(0,3).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div></div><div class="pact">${actBtns(p)}</div></article>`}
+function prow(p){return `<article class="prow" data-act="detail" data-id="${p.id}" tabindex="0" aria-label="${esc(p.name)}">${thumbBlock(p)}<div class="meta"><h3 title="${esc(p.name)}">${esc(p.name)}</h3><p class="muted xs">${esc(p.category)} · ${esc(p.creator||'Pembuat tidak diketahui')} · ${esc(fmtLabel(p))} · ${p.kind==='link'?'Tautan':fmtSize(p.size)} · ${esc(sourceLabel(p))}</p><div class="tags">${p.tags.slice(0,4).map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div></div><div class="pact">${actBtns(p)}</div></article>`}
+const emptyState=(icon,title,text,actions='')=>`<div class="empty"><div class="ei">${ic(icon,34)}</div><h2>${esc(title)}</h2><p>${esc(text)}</p><div class="row-actions" style="justify-content:center">${actions}</div></div>`;
+const secHead=(t,sub,link='')=>`<div class="sec-h"><div><h2>${t}</h2>${sub?`<p class="muted sm">${sub}</p>`:''}</div>${link}</div>`;
+const popularScore=p=>p.opens+p.plays*2+(p.fav?3:0);
+const popular=()=>S.presets.filter(p=>popularScore(p)>0).sort((a,b)=>popularScore(b)-popularScore(a));
+function matches(p,q){if(!q)return true;const hay=[p.name,p.creator||'',p.category,p.tags.join(' '),p.ext,fmtLabel(p),p.description].join(' ').toLowerCase();return q.toLowerCase().split(/\s+/).filter(Boolean).every(t=>hay.includes(t))}
+function filtered(){const L=S.lib;let r=S.presets.filter(p=>matches(p,L.q)&&(L.cat==='all'||p.category===L.cat)&&(L.fmt==='all'||groupOfPreset(p)===L.fmt)&&(!L.fav||p.fav));
+ const s={new:(a,b)=>b.added-a.added,old:(a,b)=>a.added-b.added,name:(a,b)=>a.name.localeCompare(b.name,'id'),popular:(a,b)=>popularScore(b)-popularScore(a)}[L.sort]||((a,b)=>b.added-a.added);return r.sort(s)}
+const previewKey=p=>p.hasPrev?p.id+':prev':(p.hasMain&&['video','image'].includes(groupOf(p.ext))?p.id+':main':null);
+const presetLink=p=>location.href.split('#')[0]+'#/detail/'+p.id;
+function trackOpen(p){p.opens++;S.opened=[{id:p.id,t:Date.now()},...S.opened.filter(o=>o.id!==p.id)].slice(0,50);savePresets();saveLists()}
+function trackPlay(p){p.plays++;S.played=[{id:p.id,t:Date.now()},...S.played.filter(o=>o.id!==p.id)].slice(0,50);savePresets();saveLists()}
+
+/* ============ router ============ */
+function parseHash(){const h=location.hash.replace(/^#\/?/,'');const [name,id]=h.split('/');if(ROUTES[name])return{name,id:id||null};return{name:'home',id:null}}
+function go(path){closeAllModals();S.depth++;const t='#/'+path;if(location.hash===t)onRoute();else location.hash=t}
+function cleanup(){stopPlayer();stopScan()}
+function onRoute(){cleanup();S.route=parseHash();render()}
+function render(){
+ const r=S.route,view=$('#view');let html='';
+ try{html=(VIEWS[r.name]||VIEWS.home)(r)}catch(e){console.error(e);html=emptyState('alert','Terjadi kesalahan','Halaman tidak dapat ditampilkan: '+(e&&e.message||e),'<button class="btn primary" data-act="go" data-go="home">Ke Home</button>')}
+ view.innerHTML=html;view.classList.remove('enter');void view.offsetWidth;view.classList.add('enter');
+ updateNav();document.title=(ROUTES[r.name]||'Home')+' · ALIGHT MOTION PRESET PLAYER PRO';
+ window.scrollTo(0,0);
+ try{(AFTER[r.name]||(()=>{}))(r)}catch(e){console.error(e)}
+ hydrateThumbs(view)}
+function refresh(){const y=window.scrollY;if(S.route.name==='player'){syncFavButtons();return}S.noTrack=true;try{render()}finally{S.noTrack=false}window.scrollTo(0,y)}
+function syncFavButtons(){$$('[data-act=fav]').forEach(b=>{const p=byId(b.dataset.id);if(p)b.classList.toggle('on',p.fav)});$$('[data-favlabel]').forEach(b=>{const p=byId(b.dataset.favlabel);if(p){b.classList.toggle('on',p.fav);b.innerHTML=ic('heart',18)+(b.dataset.long?(p.fav?' Favorit':' Tambah favorit'):'')}})}
+
+/* ============ chrome ============ */
+function buildChrome(){
+ $('#boot-logo').innerHTML=ic('film',32);$('#top-logo').innerHTML=ic('film',18);$('#search-ic').innerHTML=ic('search',18);$('#sclr').innerHTML=ic('x',16);
+ $('#sidebar').innerHTML=`<div class="brand" data-act="go" data-go="home"><div class="logo">${ic('film',22)}</div><div class="bt"><b>ALIGHT MOTION<br>PRESET PLAYER PRO</b></div></div>
+ <nav class="nav">${NAV.map(([k,i])=>`<button data-act="go" data-go="${k}" data-nav="${k}" title="${ROUTES[k]}">${ic(i,20)}<span class="l">${ROUTES[k]}</span><span class="cnt" data-cnt="${k}"></span></button>`).join('')}</nav>
+ <div class="sb-foot"><button class="btn ghost sm" data-act="theme" title="Ganti tema">${ic('sun',16)}<span class="l">Tema</span></button><button class="btn ghost sm" data-act="collapse" title="Ciutkan sidebar">${ic('menu',16)}<span class="l">Ciutkan</span></button></div>`;
+ $('#top-act').innerHTML=`<button class="icon-btn" data-act="help" title="Pintasan keyboard (?)" aria-label="Bantuan pintasan" ><span class="hide-m" style="display:contents">${ic('keyboard',20)}</span></button><button class="icon-btn" data-act="theme" id="theme-btn" title="Ganti tema" aria-label="Ganti tema"></button><button class="btn primary hide-m" data-act="go" data-go="import">${ic('plus',18)}Tambah Preset</button><button class="icon-btn primary-ic" data-act="go" data-go="import" title="Tambah preset" aria-label="Tambah preset" style="background:var(--grad);color:#fff;border:0;display:none" id="add-m">${ic('plus',20)}</button>`;
+ const bl={home:['home','Home'],library:['library','Library'],player:['play','Player'],queue:['list','Antrean'],more:['more','Lainnya']};
+ $('#bottomnav').innerHTML=BOTTOM.map(k=>`<button data-act="${k==='more'?'more':'go'}" data-go="${k}" data-bn="${k}" aria-label="${bl[k][1]}">${ic(bl[k][0],22)}<span>${bl[k][1]}</span></button>`).join('');
+ const mq=matchMedia('(max-width:860px)');const fixAdd=()=>{const a=$('#add-m');if(a)a.style.display=mq.matches?'inline-grid':'none'};fixAdd();mq.addEventListener?.('change',fixAdd)}
+function updateNav(){const n=S.route.name==='detail'?'library':S.route.name;
+ $$('[data-nav]').forEach(b=>{const on=b.dataset.nav===n;b.classList.toggle('active',on);if(on)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ $$('[data-bn]').forEach(b=>b.classList.toggle('active',b.dataset.bn===n||(b.dataset.bn==='more'&&!['home','library','player','queue','detail'].includes(n))));
+ const cnt={favorites:S.presets.filter(p=>p.fav).length,queue:S.queue.length,library:S.presets.length};
+ $$('[data-cnt]').forEach(c=>{const v=cnt[c.dataset.cnt];c.textContent=v||'';c.style.display=v?'':'none'});
+ const tb=$('#theme-btn');if(tb)tb.innerHTML=ic(S.settings.theme==='dark'?'sun':'moon',20)}
+function applySettings(){const s=S.settings,h=document.documentElement;h.dataset.theme=s.theme;h.dataset.accent=s.accent;h.dataset.anim=s.anim?'on':'off';
+ h.style.setProperty('--card-min',{s:'150px',m:'200px',l:'270px'}[s.grid]||'200px');$('#app').classList.toggle('collapsed',!!s.collapsed);
+ const m=document.querySelector('meta[name=theme-color]');if(m)m.content=s.theme==='dark'?'#06060c':'#f3f4fb'}
+
+/* ============ VIEWS ============ */
+const VIEWS={};const AFTER={};
+VIEWS.home=()=>{
+ const P=S.presets,favs=P.filter(p=>p.fav),newest=[...P].sort((a,b)=>b.added-a.added).slice(0,8),pop=popular().slice(0,8);
+ const rec=S.opened.map(o=>byId(o.id)).filter(Boolean).slice(0,8);const feat=pop[0]||newest.find(p=>!p.demo)||newest[0];
+ const recs=recommend().slice(0,6);
+ const catCount=c=>P.filter(p=>p.category===c).length;
+ return `<section class="page">
+ <div class="hero card"><div class="hero-t"><span class="eyebrow">Discover • Preview • Organize • Create</span><h1>ALIGHT MOTION<br><span class="grad-t">PRESET PLAYER PRO</span></h1><p class="muted">Kelola koleksi preset, putar preview video, atur antrean, dan simpan semuanya di perangkatmu — tanpa server.</p><div class="hero-a"><button class="btn primary" data-act="go" data-go="import">${ic('plus',18)}Tambah Preset</button><button class="btn" data-act="go" data-go="library">${ic('library',18)}Jelajahi Library</button><button class="btn ghost" data-act="go" data-go="qr">${ic('qr',18)}QR Scanner</button><button class="btn ghost" data-act="go" data-go="paste">${ic('clipboard',18)}Tempel Preset</button></div></div>
+ ${feat?`<div class="hero-f" data-act="detail" data-id="${feat.id}" role="link" tabindex="0" aria-label="Buka ${esc(feat.name)}">${visual(feat)}<div class="cap"><span class="eyebrow">${pop[0]?'Paling sering dibuka':'Unggulan'}</span><h2>${esc(feat.name)}</h2><p class="sm" style="opacity:.85">${esc(feat.category)} · ${esc(feat.creator||'Pembuat tidak diketahui')}</p></div></div>`:''}</div>
+ <div class="stats">
+  <div class="card stat" data-act="go" data-go="library"><div class="si">${ic('library',22)}</div><div><b>${P.length}</b><span class="muted sm">Total preset</span></div></div>
+  <div class="card stat" data-act="go" data-go="favorites"><div class="si">${ic('heart',22)}</div><div><b>${favs.length}</b><span class="muted sm">Favorit</span></div></div>
+  <div class="card stat" data-act="go" data-go="queue"><div class="si">${ic('list',22)}</div><div><b>${S.queue.length}</b><span class="muted sm">Dalam antrean</span></div></div>
+  <div class="card stat" data-act="go" data-go="recent"><div class="si">${ic('clock',22)}</div><div><b>${S.opened.length}</b><span class="muted sm">Riwayat dibuka</span></div></div></div>
+ ${P.length?'':emptyState('film','Library masih kosong','Tambahkan preset pertamamu atau muat ulang data demo dari Settings.','<button class="btn primary" data-act="go" data-go="import">Tambah Preset</button><button class="btn" data-act="set-demo">Muat data demo</button>')}
+ ${newest.length?`<div>${secHead('Preset Terbaru','',`<button class="btn ghost sm" data-act="go" data-go="library">Lihat semua</button>`)}<div class="hrow">${newest.map(pcard).join('')}</div></div>`:''}
+ <div>${secHead('Paling Populer','Berdasarkan aktivitas buka &amp; putar di perangkat ini')}${pop.length?`<div class="hrow">${pop.map(pcard).join('')}</div>`:`<p class="muted sm">Belum ada aktivitas. Buka atau putar preset agar muncul di sini.</p>`}</div>
+ <div>${secHead('Favorit','',favs.length?`<button class="btn ghost sm" data-act="go" data-go="favorites">Lihat semua</button>`:'')}${favs.length?`<div class="hrow">${favs.slice(0,8).map(pcard).join('')}</div>`:`<p class="muted sm">Tekan ikon hati pada preset untuk menambahkannya ke favorit.</p>`}</div>
+ <div>${secHead('Kategori')}<div class="cats">${CATS.map(c=>`<button class="chip" data-act="cat" data-cat="${esc(c)}">${esc(c)} <b>${catCount(c)}</b></button>`).join('')}</div></div>
+ <div>${secHead('Terakhir Dibuka','',rec.length?`<button class="btn ghost sm" data-act="go" data-go="recent">Riwayat</button>`:'')}${rec.length?`<div class="hrow">${rec.map(pcard).join('')}</div>`:`<p class="muted sm">Belum ada riwayat.</p>`}</div>
+ ${recs.length?`<div>${secHead('Rekomendasi','Dipilih dari kategori yang sering kamu buka atau favoritkan')}<div class="hrow">${recs.map(pcard).join('')}</div></div>`:''}
+ ${P.some(p=>p.demo)?`<div class="notice">${ic('info',18)}<div>Entri berlabel <b>DEMO</b> hanyalah contoh tampilan: tidak berisi file, pembuat, atau ukuran asli. Tambahkan file milikmu lewat <a href="#/import">Import Preset</a>.</div></div>`:''}
+ </section>`};
+function recommend(){const w={};S.presets.filter(p=>p.fav).forEach(p=>w[p.category]=(w[p.category]||0)+3);S.opened.slice(0,15).forEach(o=>{const p=byId(o.id);if(p)w[p.category]=(w[p.category]||0)+1});
+ const day=new Date().toDateString();const h=s=>{let x=0;for(const c of s+day)x=(x*31+c.charCodeAt(0))>>>0;return x%100/100};
+ return S.presets.filter(p=>!p.fav).map(p=>({p,s:(w[p.category]||0)+h(p.id)})).sort((a,b)=>b.s-a.s).map(x=>x.p)}
+
+function libResultsHTML(){const L=S.lib,all=filtered(),shown=all.slice(0,L.page*12);
+ if(!S.presets.length)return emptyState('film','Library kosong','Belum ada preset. Tambahkan file preset atau preview video dari perangkatmu.','<button class="btn primary" data-act="go" data-go="import">Tambah Preset</button><button class="btn" data-act="set-demo">Muat data demo</button>');
+ if(!all.length)return emptyState('search','Tidak ada hasil yang cocok','Coba kata kunci lain atau reset filter.','<button class="btn primary" data-act="lib-reset">Reset pencarian &amp; filter</button>');
+ return `<p class="muted sm" style="margin-bottom:10px">${all.length} preset ditemukan${L.q?` untuk “${esc(L.q)}”`:''}</p>${L.view==='grid'?`<div class="grid">${shown.map(pcard).join('')}</div>`:`<div class="plist">${shown.map(prow).join('')}</div>`}${shown.length<all.length?`<div style="text-align:center;margin-top:16px"><button class="btn" data-act="lib-more">Muat lebih banyak (${all.length-shown.length})</button></div>`:''}`}
+function renderLibResults(){const el=$('#lib-results');if(el){el.innerHTML=libResultsHTML();hydrateThumbs(el)}}
+VIEWS.library=()=>{const L=S.lib;const grp=['all','video','image','audio','xml','zip','project','other','link','demo'];
+ return `<section class="page"><div class="page-h"><div><h1>Preset Library</h1><p class="muted">Cari dan kelola semua presetmu.</p></div><div class="row-actions"><button class="btn primary" data-act="go" data-go="import">${ic('plus',18)}Tambah</button></div></div>
+ <div class="card filters">
+  <label class="fld"><span>Kategori</span><select class="input" data-in="lib-cat"><option value="all">Semua kategori</option>${CATS.map(c=>`<option ${L.cat===c?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
+  <label class="fld"><span>Format file</span><select class="input" data-in="lib-fmt">${grp.map(g=>`<option value="${g}" ${L.fmt===g?'selected':''}>${g==='all'?'Semua format':GROUP_LABEL[g]}</option>`).join('')}</select></label>
+  <label class="fld"><span>Urutkan</span><select class="input" data-in="lib-sort">${[['new','Terbaru'],['old','Terlama'],['name','Nama (A–Z)'],['popular','Terpopuler']].map(([v,t])=>`<option value="${v}" ${L.sort===v?'selected':''}>${t}</option>`).join('')}</select></label>
+  <button class="chip ${L.fav?'on':''}" data-act="lib-fav" style="min-height:44px">${ic('heart',16)} Favorit saja</button>
+  <div class="seg" role="group" aria-label="Tampilan"><button class="${L.view==='grid'?'on':''}" data-act="lib-view" data-v="grid" aria-label="Tampilan grid" title="Grid">${ic('library',18)}</button><button class="${L.view==='list'?'on':''}" data-act="lib-view" data-v="list" aria-label="Tampilan daftar" title="Daftar">${ic('rows',18)}</button></div>
+  <button class="btn ghost" data-act="lib-reset">Reset</button></div>
+ <div id="lib-results">${libResultsHTML()}</div></section>`};
+
+VIEWS.favorites=()=>{const f=S.presets.filter(p=>p.fav).sort((a,b)=>b.added-a.added);
+ return `<section class="page"><div class="page-h"><div><h1>Favorites</h1><p class="muted">${f.length} preset favorit</p></div>${f.length?`<button class="btn danger" data-act="fav-clear">${ic('trash',16)}Hapus semua favorit</button>`:''}</div>${f.length?`<div class="grid">${f.map(pcard).join('')}</div>`:emptyState('heart','Belum ada favorit','Tekan ikon hati pada kartu preset untuk menyimpannya di sini.','<button class="btn primary" data-act="go" data-go="library">Buka Library</button>')}</section>`};
+VIEWS.recent=()=>{const sec=(list,title,clr,sub)=>{const items=list.map(o=>({p:byId(o.id),t:o.t})).filter(x=>x.p);return `<div>${secHead(title,sub,items.length?`<button class="btn danger sm" data-act="${clr}">${ic('trash',14)}Hapus riwayat</button>`:'')}${items.length?`<div class="plist">${items.map(x=>`<div>${prow(x.p)}<p class="muted xs" style="margin:3px 8px 0">${new Date(x.t).toLocaleString('id-ID')}</p></div>`).join('')}</div>`:'<p class="muted sm">Belum ada riwayat.</p>'}</div>`};
+ return `<section class="page"><div class="page-h"><div><h1>Recent</h1><p class="muted">Riwayat tersimpan hanya di perangkat ini.</p></div></div>${sec(S.opened,'Terakhir dibuka','opened-clear','Preset yang kamu buka detailnya atau playernya')}${sec(S.played,'Preview yang baru diputar','played-clear','Hanya tercatat saat video/preview benar-benar diputar')}</section>`};
+
+VIEWS.queue=()=>{const q=S.queue.map(byId).filter(Boolean);
+ return `<section class="page"><div class="page-h"><div><h1>Queue</h1><p class="muted">${q.length} preset dalam antrean preview</p></div><div class="row-actions">${q.length?`<button class="btn primary" data-act="qstart">${ic('play',16)}Putar antrean</button><button class="chip ${S.settings.repeatQueue?'on':''}" data-act="qrepeat" style="min-height:44px">${ic('repeat',16)}Ulangi</button><button class="btn danger" data-act="qclear">${ic('trash',16)}Hapus semua</button>`:''}</div></div>
+ ${q.length?`<div class="plist">${q.map((p,i)=>`<div class="prow" style="grid-template-columns:34px 110px minmax(0,1fr) auto"><b class="muted" style="text-align:center">${i+1}</b><div class="thumb">${visual(p)}</div><div class="meta"><h3>${esc(p.name)}</h3><p class="muted xs">${esc(p.category)} · ${previewKey(p)?'Preview tersedia':'<span style="color:var(--warn)">Preview belum tersedia</span>'}</p></div><div class="pact"><button class="icon-btn sm" data-act="qplay" data-id="${p.id}" aria-label="Putar" title="Putar">${ic('play',16)}</button><button class="icon-btn sm" data-act="qup" data-i="${i}" ${i===0?'disabled':''} aria-label="Naikkan" title="Naikkan">${ic('up',16)}</button><button class="icon-btn sm" data-act="qdn" data-i="${i}" ${i===q.length-1?'disabled':''} aria-label="Turunkan" title="Turunkan">${ic('down',16)}</button><button class="icon-btn sm danger" data-act="qrem" data-id="${p.id}" aria-label="Hapus dari antrean" title="Hapus dari antrean">${ic('x',16)}</button></div></div>`).join('')}</div>`:emptyState('list','Antrean kosong','Tambahkan preset lewat ikon daftar pada kartu atau halaman detail.','<button class="btn primary" data-act="go" data-go="library">Buka Library</button>')}</section>`};
+AFTER.queue=()=>{};
+
+VIEWS.detail=r=>{const p=byId(r.id);if(!p)return emptyState('alert','Preset tidak ditemukan','Preset ini mungkin sudah dihapus.','<button class="btn primary" data-act="go" data-go="library">Ke Library</button>');
+ if(!S.noTrack)trackOpen(p);S.activeId=p.id;
+ const src=safeUrl(p.sourceUrl);const canDl=p.hasMain||src;
+ const dlLabel=p.hasMain?'Download':(src?(p.linkType==='alight-share'?'Buka Halaman Import':'Buka Tautan'):'Download');
+ const altNotice=(p.kind==='link'&&p.linkType==='alight-share')?`<div class="notice">${ic('info',18)}<div>Ini <b>link berbagi Alight Motion</b>, bukan file unduhan. Buka halaman resminya di tab baru; impor dilakukan di sana atau di aplikasi Alight Motion (perangkat yang didukung, versi terbaru). Player ini tidak mengunduh paket dan tidak mengimpor ke aplikasi.</div></div>`:'';
+ const similar=S.presets.filter(x=>x.id!==p.id&&(x.category===p.category||x.tags.some(t=>p.tags.includes(t)))).slice(0,6);
+ const unk='<span class="muted">Belum diketahui</span>';
+ const steps=`<ol class="steps"><li>Putar preview untuk memastikan preset sesuai kebutuhan.</li><li>Unduh file preset (jika tersedia) atau buka tautan sumbernya.</li><li>Impor ke Alight Motion dari aplikasinya (langkah dan format yang didukung dapat berbeda antar versi aplikasi).</li><li>Sesuaikan durasi dan parameter di proyekmu.</li></ol>`;
+ return `<section class="page"><div class="page-h"><button class="btn ghost" data-act="back">${ic('back',18)}Kembali</button><div class="row-actions"><button class="btn" data-act="edit" data-id="${p.id}">${ic('edit',16)}Edit</button><button class="btn danger" data-act="del" data-id="${p.id}">${ic('trash',16)}Hapus</button></div></div>
+ <div class="detail"><div style="display:flex;flex-direction:column;gap:12px"><div class="thumb card" style="overflow:hidden">${visual(p)}<span class="badge">${esc(fmtLabel(p))}</span>${p.demo?'<span class="badge demo">DEMO</span>':''}</div>
+  <div class="row-actions"><button class="btn primary" data-act="play" data-id="${p.id}">${ic('play',16)}Putar preview</button><button class="btn" data-act="fav" data-id="${p.id}" data-favlabel="${p.id}" data-long="1">${ic('heart',16)} ${p.fav?'Favorit':'Tambah favorit'}</button><button class="btn" data-act="qadd" data-id="${p.id}">${ic('list',16)}Antrean</button></div></div>
+ <div class="card pad" style="display:flex;flex-direction:column;gap:14px"><div><span class="eyebrow">${esc(p.category)}</span><h1>${esc(p.name)}</h1></div>
+  <p class="${p.description?'':'muted'}">${esc(p.description||'Tidak ada deskripsi.')}</p>
+  <div class="tags">${p.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')||'<span class="muted sm">Tanpa tag</span>'}</div>
+  <div class="meta-grid"><div><span>Pembuat</span><b>${p.creator?esc(p.creator):unk}</b></div><div><span>Kategori</span><b>${esc(p.category)}</b></div><div><span>Format</span><b>${p.demo?'Tanpa file (demo)':p.kind==='link'?'Tautan':esc((p.ext||'—').toUpperCase())}</b></div><div><span>Ukuran</span><b>${p.size!=null?fmtSize(p.size):unk}</b></div><div><span>Resolusi</span><b>${p.resolution?esc(p.resolution.replace('x',' × ')):unk}</b></div><div><span>Durasi preview</span><b>${p.duration!=null?fmtTime(p.duration):unk}</b></div><div><span>Ditambahkan</span><b>${fmtDate(p.added)}</b></div><div><span>Dibuka / diputar</span><b>${p.opens}× / ${p.plays}×</b></div><div><span>Sumber</span><b>${esc(sourceLabel(p))}</b></div><div><span>${p.kind==='link'?'Jenis tautan':'Nama file'}</span><b>${p.kind==='link'?(p.linkType?esc(LINK_LABEL[p.linkType]):unk):(p.fileName?esc(p.fileName):unk)}</b></div>${p.kind==='link'?`<div class="full"><span>Judul halaman (saat disimpan)</span><b>${p.pageTitle?esc(p.pageTitle):unk}</b></div>`:''}</div>
+  ${src?`<div class="sm"><span class="muted">Tautan sumber: </span><a href="${esc(src)}" target="_blank" rel="noopener noreferrer">${esc(new URL(src).hostname)} ${ic('external',13)}</a></div>`:''}
+  ${p.demo?`<div class="notice warn">${ic('alert',18)}<div>Ini data demo tanpa file. Tombol unduh dinonaktifkan karena memang tidak ada file yang bisa diunduh.</div></div>`:''}
+  ${altNotice}<div class="row-actions"><button class="btn primary ${canDl?'':'off'}" data-act="dl" data-id="${p.id}" ${canDl?'':'disabled'} title="${canDl?(p.hasMain?'Unduh':'Buka tautan sumber'):'Tidak ada file atau tautan untuk diunduh'}">${ic(p.hasMain?'download':'external',16)}${dlLabel}</button><button class="btn" data-act="share" data-id="${p.id}">${ic('share',16)}Share</button><button class="btn" data-act="copy" data-id="${p.id}">${ic('link',16)}Salin link</button>${p.kind==='link'&&src?`<button class="btn" data-act="copy-src" data-id="${p.id}">${ic('copy',16)}Salin link sumber</button>`:''}${p.hasMain&&p.ext==='xml'?`<button class="btn" data-act="xml-view" data-id="${p.id}">${ic('eye',16)}Lihat isi XML</button>`:''}</div>
+  <p class="muted xs">Link preset hanya berfungsi di browser dan perangkat ini karena data tersimpan lokal.</p>
+  <div><h3>Petunjuk penggunaan</h3>${steps}</div></div></div>
+ ${similar.length?`<div>${secHead('Preset serupa')}<div class="hrow">${similar.map(pcard).join('')}</div></div>`:''}</section>`};
+
+/* ----- Player ----- */
+VIEWS.player=r=>{const id=r.id||S.activeId;const p=id&&byId(id);
+ if(!p)return `<section class="page"><div class="page-h"><div><h1>Player</h1></div></div>${emptyState('film','Belum ada preset aktif','Pilih preset dari library, lalu tekan tombol putar untuk melihat pratinjaunya di sini.','<button class="btn primary" data-act="go" data-go="library">Buka Preset Library</button>')}</section>`;
+ S.activeId=p.id;const up=upNext(p);
+ return `<section class="page"><div class="page-h"><div style="min-width:0"><button class="btn ghost sm" data-act="back">${ic('back',16)}Kembali ke library</button><h1 style="margin-top:8px">${esc(p.name)}</h1><p class="muted sm">${esc(p.category)} · ${esc(p.creator||'Pembuat tidak diketahui')}</p></div></div>
+ <div class="player-grid"><div>
+  <div class="stage paused" id="stage"><div id="stage-media" style="display:contents"></div><div class="stage-ov ld show" id="stage-ov"><div class="box"><span class="spin"></span><span>Memuat preview…</span></div></div><button class="bigplay" data-act="pl-toggle" aria-label="Putar">${ic('play',30)}</button></div>
+  <div class="card ctrl" id="ctrl"><div class="seek"><span id="t-cur">0:00</span><input type="range" id="seek" min="0" max="1000" value="0" step="1" data-in="pl-seek" aria-label="Posisi video" disabled><span id="t-dur">0:00</span></div>
+   <button class="icon-btn" data-act="pl-prev" aria-label="Preset sebelumnya" title="Sebelumnya">${ic('prev',20)}</button>
+   <button class="icon-btn" data-act="pl-back5" aria-label="Mundur 5 detik" title="Mundur 5 detik (←)">${ic('back5',20)}</button>
+   <button class="btn primary" id="pl-play" data-act="pl-toggle" aria-label="Putar/jeda" style="width:56px;padding:0" disabled>${ic('play',22)}</button>
+   <button class="icon-btn" data-act="pl-fwd5" aria-label="Maju 5 detik" title="Maju 5 detik (→)">${ic('fwd5',20)}</button>
+   <button class="icon-btn" data-act="pl-next" aria-label="Preset berikutnya" title="Berikutnya">${ic('next',20)}</button>
+   <button class="icon-btn" id="pl-loop" data-act="pl-loop" aria-label="Ulangi video" title="Ulangi video">${ic('repeat',18)}</button>
+   <span class="sp"></span>
+   <div class="vol"><button class="icon-btn sm" id="pl-mute" data-act="pl-mute" aria-label="Bisukan" title="Bisukan (M)">${ic('volume',18)}</button><input type="range" id="vol" min="0" max="100" value="${Math.round(S.settings.volume*100)}" data-in="pl-vol" aria-label="Volume"></div>
+   <select class="input" id="speed" data-in="pl-speed" aria-label="Kecepatan">${[0.25,0.5,1,1.5,2].map(v=>`<option value="${v}" ${v===S.settings.speed?'selected':''}>${v}x</option>`).join('')}</select>
+   <button class="icon-btn" data-act="pl-fs" aria-label="Layar penuh" title="Layar penuh (F)">${ic('fullscreen',20)}</button></div>
+  <div class="pl-acts"><button class="btn ${p.fav?'on':''}" data-act="fav" data-id="${p.id}" data-favlabel="${p.id}" data-long="1">${ic('heart',18)} ${p.fav?'Favorit':'Tambah favorit'}</button><button class="btn" data-act="detail" data-id="${p.id}">${ic('info',16)}Detail</button><button class="btn" data-act="qadd" data-id="${p.id}">${ic('list',16)}Antrean</button><button class="btn" data-act="copy" data-id="${p.id}">${ic('link',16)}Salin link</button><button class="btn ghost" data-act="go" data-go="library">${ic('library',16)}Library</button></div></div>
+ <aside class="side"><div class="card pad"><h3>Info preset</h3><div class="meta-grid" style="margin-top:10px"><div><span>Format</span><b>${esc(fmtLabel(p))}</b></div><div><span>Ukuran</span><b>${p.size!=null?fmtSize(p.size):'—'}</b></div><div><span>Resolusi</span><b id="i-res">${p.resolution?esc(p.resolution.replace('x',' × ')):'—'}</b></div><div><span>Durasi</span><b id="i-dur">${p.duration!=null?fmtTime(p.duration):'—'}</b></div></div><div class="tags" style="margin-top:10px">${p.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div></div>
+  <div class="card pad"><h3>${S.queue.length?'Berikutnya di antrean':'Preset lainnya'}</h3><div style="margin-top:8px">${up.length?up.map(x=>`<div class="mini" data-act="play" data-id="${x.id}"><div class="thumb">${visual(x)}</div><div style="min-width:0"><h3>${esc(x.name)}</h3><p class="muted xs">${esc(x.category)}</p></div></div>`).join(''):'<p class="muted sm">Tidak ada preset lain.</p>'}</div></div></aside></div></section>`};
+function orderList(){return S.queue.length?S.queue.map(byId).filter(Boolean):filtered()}
+function upNext(p){const l=orderList();const i=l.findIndex(x=>x.id===p.id);return (i<0?l:[...l.slice(i+1),...l.slice(0,i)]).filter(x=>x.id!==p.id).slice(0,5)}
+function setOverlay(kind,html){const ov=$('#stage-ov');if(!ov)return;ov.className='stage-ov '+({ld:'ld',er:'er',ph:'ph'}[kind]||'')+(kind?' show':'');ov.innerHTML=html||''}
+function placeholderOverlay(p,msg){const ov=$('#stage-ov');if(!ov)return;ov.className='stage-ov ph show';ov.style.background='';ov.innerHTML=`<div class="vis" style="--h:${catHue(p.category)}"><span class="vis-ic" style="opacity:.25">${ic('film',120)}</span></div><div class="box"><span class="ph-badge">Preview Belum Tersedia</span><span class="sm">${esc(msg)}</span></div>`}
+async function mountPlayer(p){
+ const media=$('#stage-media');if(!media)return;
+ const tok=Symbol('pl');S.player={id:p.id,v:null,logged:false,loop:S.player.loop,token:tok};trackOpen(p);
+ const key=previewKey(p);
+ if(!key){const nat=p.demo?'Ini data demo. Tambahkan file video milikmu lewat Import Preset.':p.kind==='link'?'Entri tautan tidak memiliki file preview.':`Preset ${(p.ext||'').toUpperCase()||'ini'} tidak memiliki file preview yang dapat diputar browser. Tambahkan file preview lewat tombol Edit pada halaman detail.`;placeholderOverlay(p,nat);return}
+ let blob=null;try{blob=await DB.get(key)}catch(e){}
+ if(S.player.token!==tok)return;
+ if(!blob){setOverlay('er',`<div class="box">${ic('alert',34)}<b>File preview tidak ditemukan</b><span class="sm">Data browser mungkin sudah dihapus. Cek di File Manager.</span></div>`);toast('File preview tidak ditemukan di penyimpanan browser.','error');return}
+ const ext=key.endsWith(':prev')?p.prevExt:p.ext,grp=groupOf(ext),url=await blobURL(key);if(S.player.token!==tok)return;
+ if(grp==='image'){media.innerHTML=`<img class="pv" alt="Preview ${esc(p.name)}">`;const im=media.firstChild;im.onload=()=>{setOverlay('');$('#stage').classList.remove('paused')};im.onerror=()=>setOverlay('er',`<div class="box">${ic('alert',34)}<b>Gambar tidak dapat ditampilkan</b></div>`);im.src=url;$('#ctrl').querySelectorAll('button:not([data-act=pl-prev]):not([data-act=pl-next]),input,select').forEach(e=>{if(!['pl-fs'].includes(e.dataset.act))e.disabled=true});return}
+ const v=document.createElement('video');v.playsInline=true;v.preload='metadata';v.volume=S.settings.volume;v.playbackRate=S.settings.speed;v.loop=S.player.loop;v.setAttribute('aria-label','Preview '+p.name);
+ media.appendChild(v);S.player.v=v;const seek=$('#seek'),stage=$('#stage');let loaded=false;
+ const upd=()=>{if(!v.isConnected)return;const d=v.duration;$('#t-cur').textContent=fmtTime(v.currentTime);if(isFinite(d)&&document.activeElement!==seek)seek.value=d?Math.round(v.currentTime/d*1000):0};
+ v.addEventListener('loadedmetadata',()=>{loaded=true;seek.disabled=false;$('#pl-play').disabled=false;$('#t-dur').textContent=fmtTime(v.duration);let ch=false;
+  if(p.duration==null&&isFinite(v.duration)){p.duration=v.duration;ch=true;$('#i-dur').textContent=fmtTime(v.duration)}
+  if(!p.resolution&&v.videoWidth>0){p.resolution=v.videoWidth+'x'+v.videoHeight;ch=true;$('#i-res').textContent=v.videoWidth+' × '+v.videoHeight}
+  if(ch)savePresets();if(grp==='audio'){setOverlay('ph','<div class="box"><span class="ph-badge">Audio preview</span></div>');$('#stage-ov').style.pointerEvents='none'}});
+ v.addEventListener('canplay',()=>{if(grp!=='audio')setOverlay('')});
+ v.addEventListener('waiting',()=>{if(loaded&&grp!=='audio')setOverlay('ld','<div class="box"><span class="spin"></span></div>')});
+ v.addEventListener('playing',()=>{if(grp!=='audio')setOverlay('')});
+ v.addEventListener('play',()=>{stage.classList.remove('paused');$('#pl-play').innerHTML=ic('pause',22);if(!S.player.logged){S.player.logged=true;trackPlay(p)}});
+ v.addEventListener('pause',()=>{stage.classList.add('paused');$('#pl-play').innerHTML=ic('play',22)});
+ v.addEventListener('timeupdate',upd);
+ v.addEventListener('volumechange',()=>{$('#pl-mute').innerHTML=ic(v.muted||v.volume===0?'mute':'volume',18)});
+ v.addEventListener('ended',()=>{stage.classList.add('paused');if(!v.loop&&S.queue.includes(p.id)){const l=S.queue,i=l.indexOf(p.id);if(i<l.length-1||S.settings.repeatQueue){stepPreset(1);return}}$('#pl-play').innerHTML=ic('play',22)});
+ v.addEventListener('error',()=>{const c=v.error&&v.error.code;const m={1:'Pemutaran dibatalkan.',2:'Terjadi masalah saat membaca file.',3:'File rusak atau codec-nya tidak didukung browser ini.',4:'Format ini tidak dapat diputar oleh browser kamu (mis. MOV/HEVC).'}[c]||'Video tidak dapat diputar.';setOverlay('er',`<div class="box">${ic('alert',34)}<b>Video tidak dapat diputar</b><span class="sm">${esc(m)}</span><button class="btn sm" data-act="pl-retry">Coba lagi</button></div>`);toast('Video tidak dapat diputar. '+m,'error')});
+ const fsh=()=>{if(S.player.v===v)v.controls=!!(document.fullscreenElement||document.webkitFullscreenElement)};document.addEventListener('fullscreenchange',fsh);S.player.fsh=fsh;
+ stage.addEventListener('click',e=>{if(e.target===v)togglePlay()});
+ v.src=url;$('#pl-loop').classList.toggle('on',v.loop);
+ if(S.settings.autoplay)v.play().catch(()=>toast('Pemutaran otomatis diblokir browser. Tekan tombol putar.','info'))}
+AFTER.player=r=>{const p=byId(r.id||S.activeId);if(p)mountPlayer(p)};
+function stopPlayer(){const v=S.player.v;if(S.player.fsh)document.removeEventListener('fullscreenchange',S.player.fsh);if(v){try{v.pause();v.removeAttribute('src');v.load()}catch{}}S.player={id:null,v:null,logged:false,loop:S.player.loop,token:null};if(document.fullscreenElement)try{document.exitFullscreen()}catch{}}
+function togglePlay(){const v=S.player.v;if(!v||$('#pl-play')?.disabled)return;if(v.paused)v.play().catch(e=>toast('Tidak dapat memutar: '+(e&&e.message||e),'error'));else v.pause()}
+function seekBy(s){const v=S.player.v;if(!v||!isFinite(v.duration))return;v.currentTime=Math.min(v.duration,Math.max(0,v.currentTime+s))}
+function toggleFS(){const st=$('#stage');if(!st)return;const cur=document.fullscreenElement||document.webkitFullscreenElement;if(cur){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}else{const f=st.requestFullscreen||st.webkitRequestFullscreen;if(!f){toast('Layar penuh tidak didukung browser ini.','warn');return}Promise.resolve(f.call(st)).catch(()=>toast('Tidak dapat masuk layar penuh.','error'))}}
+function openPlayer(id){S.activeId=id;go('player/'+id)}
+function stepPreset(dir){const list=orderList();if(!list.length){toast('Tidak ada preset untuk dipilih.','info');return}
+ let i=list.findIndex(x=>x.id===S.player.id||x.id===S.activeId);
+ if(i<0)i=dir>0?0:list.length-1;else{i+=dir;if(i>=list.length||i<0){if(S.queue.length&&!S.settings.repeatQueue){toast(dir>0?'Sudah di akhir antrean.':'Sudah di awal antrean.','info');return}i=(i+list.length)%list.length}}
+ const t=list[i];if(!previewKey(t))toast(`Preview "${t.name}" belum tersedia.`,'warn');openPlayer(t.id)}
+
+/* ----- Import ----- */
+VIEWS.import=()=>`<section class="page"><div class="page-h"><div><h1>Import Preset</h1><p class="muted">Tambahkan file dari perangkatmu. File disimpan di browser (IndexedDB), tidak dikirim ke server mana pun.</p></div></div>
+ <div class="drop" id="dropzone" data-act="imp-pick" tabindex="0" role="button" aria-label="Pilih file"><div class="ei" style="width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:color-mix(in srgb,var(--a) 18%,transparent);color:var(--b)">${ic('upload',30)}</div><h2>Pilih atau seret file ke sini</h2><p class="muted sm">MP4, WebM, MOV*, PNG, JPG, GIF, XML, ZIP, proyek Alight Motion, dan lampiran lain. Maks. 300 MB per file.<br>*MOV hanya bisa dipratinjau jika browser mendukungnya.</p><button class="btn primary" type="button">${ic('plus',16)}Pilih file</button></div>
+ <div class="notice warn">${ic('alert',18)}<div>File berformat native Alight Motion (XML/ZIP/proyek) tidak dirender browser. Tambahkan <b>file preview</b> (video/gambar) agar bisa diputar. File berbahaya (.exe, .apk, .html, .js, dll.) ditolak, dan isi file tidak pernah dijalankan.</div></div>
+ <div class="notice">${ic('info',18)}<div>Punya link preset atau kode XML? Gunakan <a href="#/paste">Tempel Preset</a> — tanpa perlu membuat file.</div></div>
+ <div id="stg-wrap">${stagedHTML()}</div></section>`;
+function stagedHTML(){const L=S.staged;if(!L.length)return '';const ok=L.filter(s=>!s.errors.length).length;
+ return `<div class="sec-h"><h2>Siap disimpan (${ok}/${L.length})</h2><div class="row-actions"><button class="btn ghost" data-act="imp-clear" ${S.busy?'disabled':''}>Batalkan semua</button><button class="btn primary" data-act="imp-save" ${S.busy||!ok?'disabled':''}>${ic('check',16)}Simpan ${ok} preset</button></div></div>
+ <div id="imp-prog" style="display:${S.busy?'block':'none'}"><div class="prog"><i id="imp-bar"></i></div><p class="muted sm" id="imp-msg" style="margin-top:6px"></p></div>
+ <div class="plist">${L.map(s=>`<div class="card stg" data-sid="${s.sid}"><div><div class="thumb">${s.thumbUrl?`<div class="vis has-img" style="--h:${catHue(s.cat)}"><img alt="" src="${s.thumbUrl}"></div>`:`<div class="vis" style="--h:${catHue(s.cat)}"><span class="vis-ic">${ic(s.ext&&IMG_EXT.includes(s.ext)?'film':'file',34)}</span></div>`}<span class="badge">${esc((s.ext||'file').toUpperCase())}</span></div><p class="muted xs" style="margin-top:6px;word-break:break-all">${esc(s.file.name)}<br>${fmtSize(s.file.size)}${s.duration!=null?' · '+fmtTime(s.duration):''}${s.resolution?' · '+s.resolution.replace('x','×'):''}</p></div>
+ <div class="form">${s.errors.map(e=>`<div class="notice bad">${ic('alert',16)}<div>${esc(e)}</div></div>`).join('')}${s.warns.map(e=>`<div class="notice warn">${ic('info',16)}<div>${esc(e)}</div></div>`).join('')}
+ ${s.errors.length?'':`<div class="stg-f"><label class="fld wide"><span>Nama preset *</span><input class="input" data-in="stg" data-sid="${s.sid}" data-f="name" maxlength="80" value="${esc(s.name)}"></label>
+ <label class="fld"><span>Kategori</span><select class="input" data-in="stg" data-sid="${s.sid}" data-f="cat">${CATS.map(c=>`<option ${s.cat===c?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
+ <label class="fld"><span>Pembuat (opsional)</span><input class="input" data-in="stg" data-sid="${s.sid}" data-f="creator" maxlength="60" value="${esc(s.creator)}"></label>
+ <label class="fld wide"><span>Deskripsi</span><textarea class="input" data-in="stg" data-sid="${s.sid}" data-f="desc" maxlength="600">${esc(s.desc)}</textarea></label>
+ <label class="fld wide"><span>Tag (pisahkan koma)</span><input class="input" data-in="stg" data-sid="${s.sid}" data-f="tags" value="${esc(s.tags)}"></label></div>
+ <div class="row-actions"><button class="btn sm" data-act="imp-prevpick" data-sid="${s.sid}">${ic('film',14)}${s.prev?'Ganti':'Tambah'} file preview</button>${s.prev?`<span class="sm muted">${esc(s.prev.name)} (${fmtSize(s.prev.size)})</span><button class="icon-btn sm" data-act="imp-prevclear" data-sid="${s.sid}" aria-label="Hapus preview">${ic('x',14)}</button>`:''}</div>`}
+ <div><button class="btn danger sm" data-act="imp-remove" data-sid="${s.sid}">${ic('trash',14)}Hapus dari daftar</button></div></div></div>`).join('')}</div>`}
+const rerenderStaged=()=>{const w=$('#stg-wrap');if(w)w.innerHTML=stagedHTML()};
+function guessCat(name,ext){const n=name.toLowerCase();if(ext==='xml')return 'XML Preset';const hit=CATS.find(c=>c!=='Custom Preset'&&c!=='XML Preset'&&n.includes(c.toLowerCase()));if(hit)return hit;if(/qr/.test(n)&&IMG_EXT.includes(ext))return 'QR Code Preset';return 'Custom Preset'}
+function drawThumb(src,w,h){return new Promise(res=>{try{const sc=Math.min(1,480/w),c=document.createElement('canvas');c.width=Math.max(1,Math.round(w*sc));c.height=Math.max(1,Math.round(h*sc));c.getContext('2d').drawImage(src,0,0,c.width,c.height);c.toBlob(b=>res(b),'image/jpeg',.8)}catch(e){res(null)}})}
+function mediaMeta(file,kind){return new Promise(res=>{if(!['image','video','audio'].includes(kind))return res(null);const url=URL.createObjectURL(file);let done=false;const fin=r=>{if(done)return;done=true;URL.revokeObjectURL(url);res(r)};setTimeout(()=>fin(null),9000);
+ if(kind==='image'){const im=new Image();im.onload=async()=>fin({w:im.naturalWidth,h:im.naturalHeight,thumb:await drawThumb(im,im.naturalWidth,im.naturalHeight)});im.onerror=()=>fin(null);im.src=url}
+ else{const v=document.createElement(kind==='video'?'video':'audio');v.preload='metadata';v.muted=true;v.playsInline=true;
+  v.onloadedmetadata=()=>{if(kind==='audio')return fin({duration:v.duration});try{v.currentTime=isFinite(v.duration)?Math.min(1,v.duration/2):0}catch{}};
+  v.onseeked=async()=>{const w=v.videoWidth,h=v.videoHeight;fin({duration:isFinite(v.duration)?v.duration:null,w,h,thumb:w?await drawThumb(v,w,h):null})};v.onerror=()=>fin(null);v.src=url}})}
+async function addStaged(files){
+ let added=[];
+ for(const f of files){if(S.staged.length>=MAX_STAGE){toast(`Maksimal ${MAX_STAGE} file sekali impor.`,'warn');break}
+  const ext=extOf(f.name),st={sid:uid(),file:f,ext,name:(f.name.replace(/\.[^.]+$/,'')||'Preset baru').slice(0,80),cat:guessCat(f.name,ext),desc:'',tags:'',creator:'',prev:null,thumb:null,thumbUrl:null,duration:null,resolution:null,errors:[],warns:[]};
+  if(BLOCK_EXT.includes(ext))st.errors.push(`Format .${ext} ditolak demi keamanan.`);
+  else if(!f.size)st.errors.push('File kosong (0 byte).');
+  else if(f.size>MAX_FILE)st.errors.push(`Ukuran ${fmtSize(f.size)} melebihi batas ${fmtSize(MAX_FILE)}.`);
+  if(!st.errors.length){if(!ext)st.warns.push('File tanpa ekstensi akan disimpan sebagai lampiran.');
+   if(f.size>WARN_FILE)st.warns.push('File besar: penyimpanan browser bisa penuh.');
+   const g=groupOf(ext);if(ext==='mov'){const v=document.createElement('video');if(!v.canPlayType('video/quicktime'))st.warns.push('Browser ini mungkin tidak dapat memutar MOV. Tambahkan preview MP4/WebM.')}
+   if(['xml','zip','project','other'].includes(g))st.warns.push('Tidak dapat dipratinjau di browser. Tambahkan file preview terpisah agar bisa diputar.')}
+  S.staged.push(st);added.push(st)}
+ rerenderStaged();
+ for(const st of added){if(st.errors.length)continue;const g=groupOf(st.ext);const m=await mediaMeta(st.file,g);if(!S.staged.includes(st))continue;
+  if(m){st.duration=m.duration??null;st.resolution=m.w?m.w+'x'+m.h:null;st.thumb=m.thumb||null;if(st.thumb)st.thumbUrl=URL.createObjectURL(st.thumb)}
+  else if(['image','video'].includes(g))st.warns.push('Thumbnail tidak dapat dibuat — format/codec mungkin tidak didukung browser.');
+  rerenderStaged()}}
+const stById=sid=>S.staged.find(s=>s.sid===sid);
+function freeStaged(s){if(s.thumbUrl)URL.revokeObjectURL(s.thumbUrl)}
+async function saveStaged(){
+ const list=S.staged.filter(s=>!s.errors.length);if(!list.length){toast('Tidak ada file valid untuk disimpan.','warn');return}
+ if(list.some(s=>!s.name.trim())){toast('Nama preset tidak boleh kosong.','error');return}
+ S.busy=true;rerenderStaged();const bar=()=>$('#imp-bar'),msg=()=>$('#imp-msg');let ok=0,fail=0,quota=false;
+ for(let i=0;i<list.length;i++){const s=list[i];if(msg())msg().textContent=`Menyimpan ${i+1} dari ${list.length}: ${s.file.name}`;if(bar())bar().style.width=Math.round(i/list.length*100)+'%';
+  const id=uid(),keys=[];
+  try{await DB.put(id+':main',withType(s.file,s.ext));keys.push(id+':main');
+   let hasPrev=false,prevExt='',thumb=s.thumb,dur=s.duration,res=s.resolution;
+   if(s.prev){const pe=extOf(s.prev.name);await DB.put(id+':prev',withType(s.prev,pe));keys.push(id+':prev');hasPrev=true;prevExt=pe;
+    const m=await mediaMeta(s.prev,groupOf(pe));if(m){if(!thumb&&m.thumb)thumb=m.thumb;if(dur==null&&m.duration!=null)dur=m.duration;if(!res&&m.w)res=m.w+'x'+m.h}}
+   if(thumb){await DB.put(id+':thumb',thumb);keys.push(id+':thumb')}
+   const p=sanitizePreset({id,name:s.name.trim(),creator:s.creator.trim()||null,category:s.cat,description:s.desc,tags:parseTags(s.tags),ext:s.ext,prevExt,fileName:s.file.name,size:s.file.size,resolution:res,duration:dur,added:Date.now(),kind:'file',hasMain:true,hasPrev,hasThumb:!!thumb});
+   S.presets.unshift(p);ok++;S.staged=S.staged.filter(x=>x!==s);freeStaged(s)
+  }catch(e){fail++;console.error(e);for(const k of keys)await DB.del(k).catch(()=>{});if(isQuota(e)){quota=true;break}}}
+ S.busy=false;savePresets();if(bar())bar().style.width='100%';
+ if(ok)toast(`${ok} preset berhasil ditambahkan.`,'success');
+ if(quota)toast('Penyimpanan penuh. Hapus beberapa file lalu coba lagi.','error');else if(fail)toast(`${fail} file gagal disimpan.`,'error');
+ if(!S.staged.length&&ok){go('library')}else{rerenderStaged();updateNav()}}
+AFTER.import=()=>{const dz=$('#dropzone');if(!dz)return;
+ ['dragenter','dragover'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('over')}));
+ ['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('over')}));
+ dz.addEventListener('drop',e=>{const f=[...(e.dataTransfer&&e.dataTransfer.files||[])];if(f.length)addStaged(f);else toast('Tidak ada file yang dijatuhkan.','warn')});
+ dz.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#f-import').click()}})};
+
+/* ----- Edit metadata ----- */
+function editPreset(p){
+ const m=openModal({title:'Edit metadata',wide:true,body:`<form class="form" id="ef" onsubmit="return false"><label class="fld"><span>Nama preset *</span><input class="input" name="name" maxlength="80" value="${esc(p.name)}"></label>
+ <div class="stg-f"><label class="fld"><span>Pembuat (opsional)</span><input class="input" name="creator" maxlength="60" value="${esc(p.creator||'')}"></label><label class="fld"><span>Kategori</span><select class="input" name="cat">${CATS.map(c=>`<option ${p.category===c?'selected':''}>${esc(c)}</option>`).join('')}</select></label></div>
+ <label class="fld"><span>Deskripsi</span><textarea class="input" name="desc" maxlength="600">${esc(p.description)}</textarea></label>
+ <label class="fld"><span>Tag (pisahkan koma)</span><input class="input" name="tags" value="${esc(p.tags.join(', '))}"></label>
+ <label class="fld"><span>Tautan sumber (opsional, http/https)</span><input class="input" name="src" inputmode="url" value="${esc(p.sourceUrl)}"></label>
+ ${p.demo?'':`<label class="fld"><span>${p.hasPrev?'Ganti':'Tambah'} file preview (video, gambar, atau audio)</span><input class="input" type="file" name="prev" accept="video/*,image/*,audio/*,.mp4,.webm,.mov,.png,.jpg,.jpeg,.gif,.webp,.mp3,.wav,.ogg,.m4a"></label>`}
+ <p class="err" id="e-err" role="alert"></p></form>`,
+ actions:[{label:'Batal'},{label:'Simpan',cls:'primary',run:async w=>{const f=$('#ef',w),q=n=>f.elements[n],err=t=>{$('#e-err',w).textContent=t;return false};
+  const name=q('name').value.trim();if(!name)return err('Nama preset wajib diisi.');
+  let src=q('src').value.trim();if(src){if(src.length>2000)return err('Tautan sumber terlalu panjang (maks. 2000 karakter).');if(!safeUrl(src))return err('Tautan sumber harus diawali http:// atau https://')}
+  const pf=q('prev')&&q('prev').files[0];let pe='';
+  if(pf){pe=extOf(pf.name);if(!['video','image','audio'].includes(groupOf(pe)))return err('File preview harus berupa video, gambar, atau audio yang didukung.');if(pf.size>MAX_FILE)return err('File preview terlalu besar (maks. 300 MB).')}
+  if(pf){try{await DB.put(p.id+':prev',withType(pf,pe));dropURL(p.id+':prev');p.hasPrev=true;p.prevExt=pe;const mt=await mediaMeta(pf,groupOf(pe));
+    if(mt){if(mt.thumb&&!p.hasThumb){await DB.put(p.id+':thumb',mt.thumb);dropURL(p.id+':thumb');p.hasThumb=true}if(p.duration==null&&mt.duration!=null)p.duration=mt.duration;if(!p.resolution&&mt.w)p.resolution=mt.w+'x'+mt.h}}catch(e){return err(isQuota(e)?'Penyimpanan penuh.':'Gagal menyimpan preview: '+(e&&e.message||e))}}
+  p.name=name;p.creator=q('creator').value.trim().slice(0,60)||null;p.category=q('cat').value;p.description=q('desc').value.slice(0,600);p.tags=parseTags(q('tags').value);p.sourceUrl=src||'';
+  if(savePresets()){toast('Metadata berhasil disimpan.','success')}refresh();updateNav()}}]})}
+async function deletePreset(p){
+ if(!await confirmBox('Hapus preset?',`"${p.name}" akan dihapus dari library beserta file yang tersimpan di browser. Tindakan ini tidak dapat dibatalkan.`,'Hapus',true))return;
+ for(const k of['main','prev','thumb']){dropURL(p.id+':'+k);await DB.del(p.id+':'+k).catch(()=>{})}
+ S.presets=S.presets.filter(x=>x.id!==p.id);S.queue=S.queue.filter(i=>i!==p.id);S.opened=S.opened.filter(o=>o.id!==p.id);S.played=S.played.filter(o=>o.id!==p.id);if(S.activeId===p.id)S.activeId=null;
+ savePresets();saveLists();toast(`"${p.name}" berhasil dihapus.`,'success');
+ if(['detail','player'].includes(S.route.name)&&(S.route.id===p.id||S.player.id===p.id))go('library');else{render();updateNav()}}
+async function downloadPreset(p){
+ const key=p.id+':main';
+ if(p.hasMain){toast('Menyiapkan file…','info');let b=null;try{b=await DB.get(key)}catch{}
+  if(!b){toast('File tidak ditemukan di penyimpanan browser (mungkin sudah dihapus).','error');return}
+  const name=safeName(p.fileName||(p.name+(p.ext?'.'+p.ext:'')));const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);
+  toast(`Unduhan "${name}" dimulai (${fmtSize(b.size)}).`,'success');return}
+ const src=safeUrl(p.sourceUrl);
+ if(src){await openLinkSafe(p.sourceUrl);return}
+ toast('Tidak ada file atau tautan yang dapat diunduh.','warn')}
+
+/* ----- QR ----- */
+const SHORT=['bit.ly','tinyurl.com','t.co','goo.gl','is.gd','cutt.ly','rb.gy','s.id','shorturl.at','ow.ly'];
+function assessUrl(t){let u;try{u=new URL(String(t).trim())}catch{return{kind:'text',warnings:[]}}
+ if(!['http:','https:'].includes(u.protocol))return{kind:'blocked',warnings:[`Skema "${u.protocol}" tidak dibuka dari aplikasi ini.`]};
+ const w=[];if(u.protocol==='http:')w.push('Tautan tidak terenkripsi (http).');if(/^\d{1,3}(\.\d{1,3}){3}$/.test(u.hostname)||u.hostname.includes(':'))w.push('Alamat berupa IP, bukan nama domain.');
+ if(u.hostname.includes('xn--'))w.push('Domain memakai punycode (bisa menyerupai domain lain).');if(u.username||u.password)w.push('URL memuat kredensial — sering dipakai untuk menyesatkan.');
+ if(SHORT.includes(u.hostname))w.push('Tautan pendek: tujuan akhir tidak terlihat.');if(u.hostname.split('.').length>4)w.push('Subdomain sangat banyak.');if(u.href.length>300)w.push('URL sangat panjang.');
+ return{kind:'url',url:u.href,host:u.hostname,warnings:w}}
+function qrResultHTML(){const r=S.qr.result;if(r==null)return '';const a=assessUrl(r);
+ return `<div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>Hasil pemindaian</h2><div class="input" style="word-break:break-all;min-height:0">${esc(r)}</div>
+ ${a.warnings.length?`<div class="notice ${a.kind==='blocked'?'bad':'warn'}">${ic('alert',18)}<div><b>Peringatan</b><ul>${a.warnings.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>`:''}
+ ${a.kind==='text'?`<p class="muted sm">Isi QR bukan tautan web. Aplikasi hanya dapat menyalinnya.</p>`:''}
+ <div class="row-actions"><button class="btn" data-act="qr-copy">${ic('copy',16)}Salin</button>${a.kind==='url'?`<button class="btn primary" data-act="qr-open">${ic('external',16)}Buka tautan</button>`:''}<button class="btn" data-act="qr-save">${ic('plus',16)}Simpan ke library</button><button class="btn ghost" data-act="qr-clear">Hapus hasil</button></div>
+ <p class="muted xs">Keberhasilan impor ke Alight Motion bergantung pada jenis QR/tautan, versi aplikasi, dan dukungan yang tersedia — tidak ada jaminan semua QR bisa langsung diimpor.</p></div>`}
+VIEWS.qr=()=>`<section class="page"><div class="page-h"><div><h1>QR Scanner</h1><p class="muted">Pindai kode QR preset lewat kamera atau pilih gambar QR dari galeri.</p></div></div>
+ <div class="two"><div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>Kamera</h2><div class="qr-box" id="qr-box"><div class="muted sm" style="padding:20px;text-align:center">Kamera belum aktif</div></div>
+  <div class="row-actions"><button class="btn primary" data-act="qr-start" id="qr-start">${ic('camera',16)}Mulai pindai</button><button class="btn" data-act="qr-stop" id="qr-stop" style="display:none">Berhenti</button></div>
+  <p class="muted xs">Kamera memerlukan izin dan koneksi aman (HTTPS atau localhost). Tanpa dukungan bawaan browser, pemindai memuat library jsQR dari internet.</p></div>
+ <div class="card pad" style="display:flex;flex-direction:column;gap:12px"><h2>Dari gambar</h2><div class="qr-box" id="qr-img">${S.qr.imgUrl?`<img alt="QR code yang dipilih" src="${S.qr.imgUrl}">`:`<div class="muted sm" style="padding:20px;text-align:center">Belum ada gambar</div>`}</div>
+  <div class="row-actions"><button class="btn primary" data-act="qr-pick">${ic('upload',16)}Pilih gambar QR</button></div>
+  <label class="fld"><span>Atau periksa tautan secara manual</span><div style="display:flex;gap:8px"><input class="input" id="qr-manual" placeholder="https://…" inputmode="url"><button class="btn" data-act="qr-check">Periksa</button></div></label></div></div>
+ ${S.qr.err?`<div class="notice bad">${ic('alert',18)}<div>${esc(S.qr.err)}</div></div>`:''}<div id="qr-res">${qrResultHTML()}</div></section>`;
+let jsqrP=null;function loadJsQR(){if(window.jsQR)return Promise.resolve(window.jsQR);if(jsqrP)return jsqrP;jsqrP=new Promise(res=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js';s.onload=()=>res(window.jsQR||null);s.onerror=()=>{jsqrP=null;res(null)};document.head.appendChild(s)});return jsqrP}
+async function decodeQR(canvas){if('BarcodeDetector' in window){try{const d=new BarcodeDetector({formats:['qr_code']});const r=await d.detect(canvas);return r&&r[0]?r[0].rawValue:null}catch(e){}}
+ const j=await loadJsQR();if(!j)throw new Error('lib');const c=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height);const r=j(c.data,c.width,c.height);return r?r.data:null}
+const setQR=t=>{S.qr.result=t;S.qr.err='';const el=$('#qr-res');if(el)el.innerHTML=qrResultHTML()};
+async function startScan(){
+ if(S.qr.scanning)return;
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast('Browser ini tidak mendukung akses kamera.','error');return}
+ if(!window.isSecureContext){toast('Kamera hanya bisa dipakai lewat HTTPS atau localhost.','error');return}
+ if(!('BarcodeDetector' in window)&&!await loadJsQR()){toast('Library pemindai gagal dimuat (perlu internet). Coba pilih gambar QR dari galeri.','error');return}
+ if(!await confirmBox('Izinkan akses kamera?','Aplikasi akan meminta izin kamera untuk memindai QR. Video tidak direkam maupun dikirim ke mana pun.','Lanjutkan'))return;
+ let stream;try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false})}catch(e){const m={NotAllowedError:'Izin kamera ditolak. Aktifkan izin kamera di pengaturan browser.',NotFoundError:'Kamera tidak ditemukan di perangkat ini.',NotReadableError:'Kamera sedang dipakai aplikasi lain.'}[e.name]||'Kamera tidak dapat dibuka: '+(e.message||e.name);S.qr.err=m;toast(m,'error');const v=$('#view');if(S.route.name==='qr')render();return}
+ if(S.route.name!=='qr'){stream.getTracks().forEach(t=>t.stop());return}
+ const box=$('#qr-box');box.innerHTML='<video playsinline muted></video><div class="qr-frame"></div>';const v=$('video',box);v.srcObject=stream;S.qr.stream=stream;S.qr.scanning=true;await v.play().catch(()=>{});
+ $('#qr-start').style.display='none';$('#qr-stop').style.display='';const cv=document.createElement('canvas');let busy=false;
+ S.qr.timer=setInterval(async()=>{if(busy||!v.videoWidth)return;busy=true;try{const sc=Math.min(1,640/v.videoWidth);cv.width=Math.round(v.videoWidth*sc);cv.height=Math.round(v.videoHeight*sc);cv.getContext('2d',{willReadFrequently:true}).drawImage(v,0,0,cv.width,cv.height);const t=await decodeQR(cv);if(t){stopScan();setQR(t);toast('QR code berhasil dibaca.','success');const b=$('#qr-box');if(b)b.innerHTML='<div class="muted sm" style="padding:20px;text-align:center">QR terbaca ✓</div>';const s=$('#qr-start'),st=$('#qr-stop');if(s)s.style.display='';if(st)st.style.display='none'}}catch(e){stopScan();toast('Pemindaian gagal: '+(e&&e.message==='lib'?'library QR tidak tersedia.':e.message||e),'error')}finally{busy=false}},320)}
+function stopScan(){if(S.qr.timer){clearInterval(S.qr.timer);S.qr.timer=null}if(S.qr.stream){S.qr.stream.getTracks().forEach(t=>t.stop());S.qr.stream=null}S.qr.scanning=false;const b=$('#qr-stop');if(b){b.style.display='none';const s=$('#qr-start');if(s)s.style.display='';}}
+async function scanImageFile(f){
+ if(!f)return;if(!/^image\//.test(f.type)&&!IMG_EXT.includes(extOf(f.name))){toast('Pilih file gambar (PNG/JPG/WebP).','error');return}
+ if(f.size>20*1024*1024){toast('Gambar terlalu besar (maks. 20 MB).','error');return}
+ if(S.qr.imgUrl)URL.revokeObjectURL(S.qr.imgUrl);S.qr.imgUrl=URL.createObjectURL(f);S.qr.imgBlob=f;const box=$('#qr-img');if(box)box.innerHTML=`<img alt="QR code yang dipilih" src="${S.qr.imgUrl}">`;
+ const im=new Image();await new Promise(r=>{im.onload=r;im.onerror=r;im.src=S.qr.imgUrl});
+ if(!im.naturalWidth){toast('Gambar tidak dapat dibuka.','error');return}
+ const sc=Math.min(1,1200/Math.max(im.naturalWidth,im.naturalHeight)),cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*sc);cv.height=Math.round(im.naturalHeight*sc);cv.getContext('2d',{willReadFrequently:true}).drawImage(im,0,0,cv.width,cv.height);
+ try{const t=await decodeQR(cv);if(t){setQR(t);toast('QR code berhasil dibaca.','success')}else{S.qr.result=null;const e=$('#qr-res');if(e)e.innerHTML=`<div class="notice bad">${ic('alert',18)}<div>QR code tidak dapat dibaca dari gambar ini. Coba gambar yang lebih jelas dan tidak terpotong.</div></div>`;toast('QR code tidak dapat dibaca.','error')}}
+ catch(e){toast('Pemindai memerlukan BarcodeDetector atau library jsQR (perlu internet).','error')}}
+function saveQRPreset(){const t=S.qr.result;if(t==null)return;const a=assessUrl(t);
+ openModal({title:'Simpan ke library',body:`<form class="form" id="qf" onsubmit="return false"><label class="fld"><span>Nama preset *</span><input class="input" name="name" maxlength="80" value="QR Preset"></label><label class="fld"><span>Deskripsi</span><textarea class="input" name="desc" maxlength="600"></textarea></label><p class="muted xs">Kategori: QR Code Preset. ${a.kind==='url'?'Tautan disimpan sebagai tautan sumber.':'Isi QR disimpan sebagai deskripsi.'}</p><p class="err" id="q-err"></p></form>`,
+ actions:[{label:'Batal'},{label:'Simpan',cls:'primary',run:async w=>{const f=$('#qf',w),name=f.elements.name.value.trim();if(!name){$('#q-err',w).textContent='Nama wajib diisi.';return false}
+  const id=uid();let hasThumb=false;try{if(S.qr.imgBlob){const im=new Image(),u=URL.createObjectURL(S.qr.imgBlob);await new Promise(r=>{im.onload=r;im.onerror=r;im.src=u});if(im.naturalWidth){const th=await drawThumb(im,im.naturalWidth,im.naturalHeight);if(th){await DB.put(id+':thumb',th);hasThumb=true}}URL.revokeObjectURL(u)}}catch(e){}
+  const desc=(f.elements.desc.value+(a.kind==='url'?'':'\nIsi QR: '+t)).trim();
+  S.presets.unshift(sanitizePreset({id,name,category:'QR Code Preset',description:desc,tags:['qr'],kind:'link',sourceUrl:a.kind==='url'?t.trim():'',linkType:a.kind==='url'?(classifyLink(t).type||''):'',hasThumb,added:Date.now()}));
+  if(savePresets())toast('Preset QR ditambahkan ke library.','success');updateNav()}}]})}
+
+/* ----- Tempel Preset (Link + XML) ----- */
+const MAX_XML_CHARS=3000000,MAX_XML_BYTES=3*1024*1024;
+const PASTE={tab:'link',
+ link:{text:'',tstate:'idle',title:null,treason:'',tok:null,name:'',cat:'Custom Preset',desc:'',tags:'',savedId:null},
+ xml:{text:'',vstate:'idle',err:'',line:null,col:null,info:null,name:'',cat:'XML Preset',creator:'',desc:'',tags:'',savedId:null}};
+const looksXml=t=>/^\s*<(\?xml|[A-Za-z_!])/.test(t||'');
+const looksUrl=t=>/^\s*https?:\/\/\S+\s*$/i.test(t||'');
+function classifyLink(raw){
+ const s=String(raw==null?'':raw).trim();
+ if(!s)return{state:'empty'};
+ if(/\s/.test(s))return{state:'invalid',reason:'Tempel hanya satu tautan, tanpa spasi atau teks lain.'};
+ if(s.length>2000)return{state:'invalid',reason:'Tautan terlalu panjang (maks. 2000 karakter).'};
+ let u;try{u=new URL(s)}catch{return{state:'invalid',reason:/^[a-z0-9.-]+\.[a-z]{2,}(\/|$)/i.test(s)?'Tautan harus diawali http:// atau https://':'Format URL tidak valid.'}}
+ if(!['http:','https:'].includes(u.protocol))return{state:'invalid',reason:`Skema "${u.protocol}" tidak diterima. Hanya tautan http:// atau https://.`};
+ const host=u.hostname.toLowerCase().replace(/\.$/,'');
+ const alightHost=host==='alightcreative.com'||host.endsWith('.alightcreative.com');
+ const type=alightHost?(u.pathname.includes('/am/share/')?'alight-share':'alight-other'):'web';
+ const a=assessUrl(s);
+ return{state:'ok',raw:s,host,type,warnings:a.warnings||[]}}
+async function fetchTitle(url){
+ if(navigator.onLine===false)return{ok:false,reason:'Perangkat sedang offline.'};
+ const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),9000);
+ try{const r=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',redirect:'follow',referrerPolicy:'no-referrer',signal:ctl.signal});
+  if(!r.ok)return{ok:false,reason:'Situs menjawab dengan status '+r.status+'.'};
+  const ct=r.headers.get('content-type')||'';if(!/html|xml/i.test(ct))return{ok:false,reason:'Isi halaman bukan HTML.'};
+  const txt=(await r.text()).slice(0,300000);
+  const d=new DOMParser().parseFromString(txt,'text/html');
+  const og=d.querySelector('meta[property="og:title"]');
+  const title=((d.title||(og&&og.getAttribute('content'))||'')+'').replace(/\s+/g,' ').trim().slice(0,200);
+  if(!title)return{ok:false,reason:'Halaman terbaca tetapi tidak memiliki judul.'};
+  return{ok:true,title}
+ }catch(e){return{ok:false,reason:e&&e.name==='AbortError'?'Waktu habis saat membaca halaman.':'Browser tidak dapat membaca halaman (kemungkinan dibatasi CORS atau jaringan).'}}
+ finally{clearTimeout(tm)}}
+async function openLinkSafe(raw){
+ const c=classifyLink(raw);if(c.state!=='ok'){toast('Tautan tidak valid: '+(c.reason||'kosong')+'','error');return false}
+ const share=c.type==='alight-share';
+ if(c.warnings.length||!share){const msg=c.warnings.length?'Tautan ini memiliki peringatan:\n• '+c.warnings.join('\n• ')+'\nTetap buka?':`Buka ${c.host} di tab baru? Aplikasi ini tidak dapat memastikan isi atau keamanan situs tujuan.`;
+  if(!await confirmBox('Buka tautan?',msg,'Buka',c.warnings.length>0))return false}
+ window.open(c.raw,'_blank','noopener,noreferrer');
+ toast(share?'Halaman berbagi dibuka di tab baru (jika tidak muncul, izinkan pop-up). Impor dilakukan di halaman tersebut.':'Tautan dibuka di tab baru (jika tidak muncul, izinkan pop-up).','info');return true}
+async function readClip(){
+ if(!navigator.clipboard||!navigator.clipboard.readText){toast('Browser ini tidak mendukung tombol tempel. Tempel manual: Ctrl+V atau tekan lama pada kolom.','warn');return null}
+ try{const t=await navigator.clipboard.readText();if(!t||!t.trim()){toast('Clipboard kosong.','info');return null}return t}
+ catch(e){toast('Izin clipboard tidak diberikan atau tidak tersedia. Tempel manual (Ctrl+V atau tekan lama pada kolom).','warn');return null}}
+const catOptions=sel=>CATS.map(c=>`<option ${sel===c?'selected':''}>${esc(c)}</option>`).join('');
+const lkHint=()=>looksXml(PASTE.link.text)?`<div class="notice warn">${ic('info',16)}<div>Isi tampak seperti XML, bukan tautan. <button class="btn sm" data-act="lk-toxml" style="margin-top:6px">Pindahkan ke tab XML</button></div></div>`:'';
+const xmHint=()=>looksUrl(PASTE.xml.text)?`<div class="notice warn">${ic('info',16)}<div>Isi tampak seperti tautan, bukan XML. <button class="btn sm" data-act="xm-tolink" style="margin-top:6px">Pindahkan ke tab Link</button></div></div>`:'';
+function linkResHTML(){
+ const L=PASTE.link,c=classifyLink(L.text);
+ if(c.state==='empty')return `<div style="text-align:center;padding:26px 8px;display:flex;flex-direction:column;align-items:center;gap:8px"><div class="ei" style="width:60px;height:60px;border-radius:18px;display:grid;place-items:center;background:color-mix(in srgb,var(--a) 18%,transparent);color:var(--b)">${ic('link',28)}</div><h3>Belum ada tautan</h3><p class="muted sm">Hasil pemeriksaan tautan akan muncul di sini setelah kamu menempelkannya.</p></div>`;
+ if(c.state==='invalid')return `<div class="pills"><span class="st bad">${ic('alert',12)}Tidak valid</span></div><div class="notice bad" style="margin-top:12px">${ic('alert',18)}<div>${esc(c.reason)}</div></div>`;
+ const share=c.type==='alight-share';
+ const saved=!!(L.savedId&&byId(L.savedId)&&byId(L.savedId).sourceUrl===c.raw);
+ const mp={idle:'<span class="st mu">Siap diperiksa</span>',loading:'<span class="st mu"><span class="spin" style="width:12px;height:12px;border-width:2px"></span>Memeriksa…</span>',ok:'<span class="st ok">Metadata terbaca</span>',fail:'<span class="st warn">Tidak dapat diproses otomatis</span>'}[L.tstate];
+ const title=L.tstate==='ok'?esc(L.title):L.tstate==='fail'?'<span class="muted">Judul belum dapat dibaca</span>':L.tstate==='loading'?'<span class="muted">Memeriksa…</span>':'<span class="muted">Belum diketahui — tekan Periksa Link</span>';
+ const detected=share?'Terdeteksi sebagai link berbagi Alight Motion':c.type==='alight-other'?'Domain alightcreative.com, tetapi bukan link berbagi (/am/share/)':'Tautan web — tidak diverifikasi sebagai link resmi Alight Motion';
+ const ph=L.title||(share?'Link Berbagi Alight Motion':c.host);
+ let notes='';
+ if(share)notes+=`<div class="notice">${ic('info',18)}<div><b>Siap dibuka — impor diselesaikan melalui halaman Alight Motion, bukan oleh player HTML.</b><br>Halaman resmi menyediakan tombol <b>Import Package</b> (bila tersedia untuk link ini); proses impor perlu dilakukan di perangkat yang didukung dengan aplikasi Alight Motion versi terbaru. Player ini hanya menyimpan dan membuka link — tidak mengunduh paket dan tidak mengimpor ke aplikasi.</div></div>`;
+ else notes+=`<div class="notice">${ic('info',18)}<div>Aplikasi tidak dapat memverifikasi bahwa tautan ini adalah preset yang dapat diimpor. Tidak ada unduhan atau impor otomatis; tautan hanya disimpan sebagai referensi.</div></div>`;
+ if(L.tstate==='fail')notes+=`<div class="notice warn">${ic('alert',18)}<div>${share?'<b>Link siap dibuka di Alight Motion; metadata otomatis tidak tersedia di browser ini.</b>':'<b>Halaman tidak dapat dibaca oleh browser.</b> Kamu tetap bisa membuka link di tab baru atau menyimpannya sebagai referensi preset.'}<br><span class="xs">Alasan: ${esc(L.treason||'tidak diketahui')}</span></div></div>`;
+ if(c.warnings.length)notes+=`<div class="notice warn">${ic('alert',18)}<div><b>Peringatan</b><ul>${c.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul></div></div>`;
+ return `<div style="display:flex;flex-direction:column;gap:12px"><div class="pills"><span class="st ok">${ic('check',12)}Valid</span>${mp}${saved?`<span class="st ok">${ic('check',12)}Tersimpan</span>`:''}</div>
+ <p><b>${esc(detected)}</b></p>
+ <div class="meta-grid"><div><span>Domain</span><b>${esc(c.host)}</b></div><div><span>Jenis</span><b>${esc(LINK_LABEL[c.type])}</b></div><div class="full"><span>Judul</span><b>${title}</b></div><div class="full"><span>URL asli</span><b class="mono" style="word-break:break-all">${esc(c.raw)}</b></div></div>
+ ${notes}
+ <div class="row-actions">${share?`<button class="btn primary" data-act="lk-open">${ic('external',16)}Buka Halaman Import</button>`:''}</div>
+ <h3 style="margin-top:4px">Simpan ke library</h3>
+ <div class="form"><label class="fld"><span>Nama preset</span><input class="input" data-in="plf" data-f="name" maxlength="80" placeholder="${esc(ph)}" value="${esc(L.name)}"></label>
+ <div class="stg-f"><label class="fld"><span>Kategori</span><select class="input" data-in="plf" data-f="cat">${catOptions(L.cat)}</select></label><label class="fld"><span>Tag (pisahkan koma)</span><input class="input" data-in="plf" data-f="tags" value="${esc(L.tags)}"></label></div>
+ <label class="fld"><span>Deskripsi</span><textarea class="input" data-in="plf" data-f="desc" maxlength="600">${esc(L.desc)}</textarea></label>
+ <div class="row-actions">${saved?`<button class="btn primary" data-act="lk-detail">${ic('library',16)}Lihat di library</button><button class="btn" data-act="lk-save">Simpan sebagai item baru</button>`:`<button class="btn primary" data-act="lk-save">${ic('plus',16)}Simpan ke Library</button>`}</div>
+ <p class="muted xs">Yang disimpan hanya tautan sebagai referensi (tanpa file). Link asli tidak diubah atau dipotong.</p></div></div>`}
+const renderLinkRes=()=>{const e=$('#lk-res');if(e)e.innerHTML=linkResHTML()};
+function linkTabHTML(){const L=PASTE.link;
+ return `<div class="two"><div class="card pad form">
+ <label class="fld"><span>Link preset (satu tautan)</span><textarea class="input mono" id="lk-in" rows="4" data-in="lk-text" placeholder="Tempel tautan https://… di sini" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">${esc(L.text)}</textarea></label>
+ <div id="lk-hint">${lkHint()}</div>
+ <div class="row-actions"><button class="btn" data-act="lk-clip">${ic('clipboard',16)}Tempel dari Clipboard</button><button class="btn primary" data-act="lk-check">${ic('search',16)}Periksa Link</button><button class="btn" data-act="lk-open">${ic('external',16)}Buka Link</button><button class="btn" data-act="lk-copy">${ic('copy',16)}Salin Link</button><button class="btn" data-act="lk-save">${ic('plus',16)}Simpan ke Library</button></div>
+ <div class="row-actions"><button class="btn ghost" data-act="lk-clear">${ic('trash',16)}Bersihkan Form</button></div>
+ <p class="muted xs">Tidak ada permintaan jaringan sampai kamu menekan <b>Periksa Link</b> atau <b>Buka Link</b>. Periksa Link meminta halaman tujuan langsung dari browsermu hanya untuk membaca judulnya; banyak situs membatasi ini sehingga judul bisa saja tidak terbaca.</p>
+ <p class="muted xs">Contoh format (ilustrasi, bukan link aktif): <span class="mono">https://alightcreative.com/am/share/…</span>. Link milikmu bisa diperiksa setelah ditempelkan.</p></div>
+ <div class="card pad" id="lk-res">${linkResHTML()}</div></div>`}
+
+/* XML */
+function parseXmlSafe(text){
+ if(!String(text).trim())return{ok:false,err:'Teks XML masih kosong.'};
+ if(text.length>MAX_XML_CHARS)return{ok:false,err:`Teks terlalu besar (maks. ${MAX_XML_CHARS.toLocaleString('id-ID')} karakter).`};
+ if(/<!ENTITY/i.test(text))return{ok:false,err:'XML mengandung deklarasi ENTITY (DTD) — ditolak demi keamanan.'};
+ let doc;try{doc=new DOMParser().parseFromString(text,'application/xml')}catch(e){return{ok:false,err:'Parser XML gagal: '+(e&&e.message||e)}}
+ const pe=doc.getElementsByTagName('parsererror')[0];
+ if(pe){let m=(pe.textContent||'').replace(/This page contains the following errors:|Below is a rendering of the page up to the first error\./gi,'').replace(/\s+/g,' ').trim().slice(0,300);
+  const lc=/line (\d+) at column (\d+)/i.exec(m)||/Line Number (\d+), Column (\d+)/i.exec(m);
+  return{ok:false,err:m||'Sintaks XML tidak valid.',line:lc?+lc[1]:null,col:lc?+lc[2]:null}}
+ if(!doc.documentElement)return{ok:false,err:'Dokumen XML tidak memiliki elemen root.'};
+ return{ok:true,doc}}
+const META_KEYS=['name','title','creator','author','version','width','height','duration','fps'];
+function xmlMeta(root){const meta={};
+ for(const a of root.attributes){const k=a.name.toLowerCase();if(META_KEYS.includes(k)&&a.value.trim()&&!(k in meta))meta[k]=a.value.trim().slice(0,120)}
+ const q=[root];for(let i=0;i<q.length&&i<500;i++){const n=q[i];const ln=(n.localName||'').toLowerCase();
+  if(n!==root&&META_KEYS.includes(ln)&&!n.children.length){const t=(n.textContent||'').trim();if(t&&t.length<=120&&!(ln in meta))meta[ln]=t}
+  if(q.length<2000)for(const c of n.children)q.push(c)}
+ return meta}
+function xmlSummary(doc){
+ const root=doc.documentElement;let count=0,maxd=0;const tags=new Map(),outline=[];let trunc=false;const st=[[root,1]];
+ while(st.length){const [n,d]=st.pop();count++;if(d>maxd)maxd=d;tags.set(n.nodeName,(tags.get(n.nodeName)||0)+1);
+  if(outline.length<300){let at='',i=0;for(const a of n.attributes){if(i++>=4){at+=' …';break}const v=a.value.replace(/\s+/g,' ');at+=` ${a.name}="${v.length>40?v.slice(0,40)+'…':v}"`}
+   outline.push('  '.repeat(Math.min(d-1,20))+'<'+n.nodeName+at+(n.children.length?'>':'/>'))}else trunc=true;
+  const ch=n.children;for(let i=ch.length-1;i>=0;i--)st.push([ch[i],d+1])}
+ const rootAttrs=[...root.attributes].slice(0,10).map(a=>[a.name,a.value.replace(/\s+/g,' ').slice(0,80)]);
+ const meta=xmlMeta(root);
+ return{root:root.nodeName,count,depth:maxd,uniq:tags.size,top:[...tags.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10),rootAttrs,meta,recognized:Object.keys(meta).length>0,outline:outline.join('\n'),trunc}}
+const META_LABEL={name:'Nama',title:'Judul',creator:'Pembuat',author:'Penulis',version:'Versi',width:'Lebar',height:'Tinggi',duration:'Durasi',fps:'FPS'};
+function xmlInfoHTML(i){
+ return `<div class="meta-grid"><div><span>Elemen root</span><b class="mono">${esc(i.root)}</b></div><div><span>Jumlah elemen</span><b>${i.count.toLocaleString('id-ID')}</b></div><div><span>Kedalaman maks.</span><b>${i.depth}</b></div><div><span>Nama tag unik</span><b>${i.uniq}</b></div>
+ <div class="full"><span>Atribut root</span><b class="mono" style="word-break:break-all">${i.rootAttrs.length?i.rootAttrs.map(([k,v])=>esc(k+'="'+v+'"')).join(' '):'<span class="muted">Tidak ada</span>'}</b></div>
+ <div class="full"><span>Metadata yang terbaca</span><b>${i.recognized?Object.entries(i.meta).map(([k,v])=>esc((META_LABEL[k]||k)+': '+v)).join(' · '):'<span class="muted">Belum diketahui</span>'}</b></div>
+ <div class="full"><span>Tag terbanyak</span><div class="kvlist" style="margin-top:4px">${i.top.map(([t,n])=>`<span class="tag">${esc(t)} ×${n}</span>`).join('')}</div></div></div>`}
+const xmCountHTML=()=>{const n=PASTE.xml.text.length;return `${n.toLocaleString('id-ID')} karakter${n>MAX_XML_CHARS?` — <span style="color:var(--err)">melebihi batas ${MAX_XML_CHARS.toLocaleString('id-ID')} karakter</span>`:''}`};
+function xmlSideHTML(){
+ const X=PASTE.xml,len=X.text.length,saved=!!(X.savedId&&byId(X.savedId));
+ let st=!len?'<span class="st mu">Kosong</span>':X.vstate==='valid'?`<span class="st ok">${ic('check',12)}Valid</span>`:X.vstate==='invalid'?`<span class="st bad">${ic('alert',12)}Tidak valid</span>`:'<span class="st mu">Siap diperiksa</span>';
+ if(len&&X.vstate==='valid'&&X.info&&!X.info.recognized)st+='<span class="st warn">Tidak dapat diproses otomatis</span>';
+ if(saved)st+=`<span class="st ok">${ic('check',12)}Tersimpan</span>`;
+ let body='';
+ if(len&&X.vstate==='invalid')body=`<div class="notice bad">${ic('alert',18)}<div><b>XML tidak valid</b>${X.line?` — baris ${X.line}, kolom ${X.col}`:''}<br><span class="sm">${esc(X.err)}</span></div></div>`;
+ else if(len&&X.vstate==='valid'&&X.info)body=xmlInfoHTML(X.info)+(X.info.recognized?`<p class="muted xs">Metadata dibaca secara generik dari atribut/elemen bernama umum; aplikasi tidak memiliki skema resmi Alight Motion untuk memastikannya.</p>`:`<div class="notice warn">${ic('info',18)}<div>Sintaks valid, tetapi tidak ada metadata yang dikenali. XML akan disimpan sebagai <b>file XML generik</b>; isinya belum dapat diinterpretasikan aplikasi ini.</div></div>`);
+ else if(len)body=`<p class="muted sm">Tekan <b>Validasi XML</b> untuk memeriksa sintaks dan melihat ringkasan struktur.</p>`;
+ else body=`<p class="muted sm">Tempel kode XML, unggah file .xml, atau pilih XML yang sudah tersimpan. Hasil validasi muncul di sini.</p>`;
+ return `<div style="display:flex;flex-direction:column;gap:12px"><div class="pills">${st}</div>${body}
+ <div class="notice">${ic('info',18)}<div>Valid secara sintaks tidak berarti preset Alight Motion yang siap diimpor — format dan kompatibilitas bergantung pada aplikasi aslinya. Isi XML hanya dibaca sebagai data, tidak pernah dijalankan.</div></div>
+ <h3>Simpan ke library</h3><div class="form"><label class="fld"><span>Nama preset</span><input class="input" data-in="pxf" data-f="name" maxlength="80" placeholder="${esc((X.info&&(X.info.meta.name||X.info.meta.title))||'XML Tempelan')}" value="${esc(X.name)}"></label>
+ <div class="stg-f"><label class="fld"><span>Kategori</span><select class="input" data-in="pxf" data-f="cat">${catOptions(X.cat)}</select></label><label class="fld"><span>Pembuat (opsional)</span><input class="input" data-in="pxf" data-f="creator" maxlength="60" value="${esc(X.creator)}"></label></div>
+ <label class="fld"><span>Tag (pisahkan koma)</span><input class="input" data-in="pxf" data-f="tags" value="${esc(X.tags)}"></label>
+ <label class="fld"><span>Deskripsi</span><textarea class="input" data-in="pxf" data-f="desc" maxlength="600">${esc(X.desc)}</textarea></label>
+ <div class="row-actions">${saved?`<button class="btn primary" data-act="xm-detail">${ic('library',16)}Lihat di library</button><button class="btn" data-act="xm-save">Simpan sebagai item baru</button>`:`<button class="btn primary" data-act="xm-save">${ic('plus',16)}Simpan XML</button>`}</div>
+ <p class="muted xs">XML disimpan sebagai file .xml di penyimpanan browser (teks apa adanya) dan tampil di Preset Library dan File Manager dengan sumber “XML Tempelan”.</p></div></div>`}
+const renderXmlSide=()=>{const e=$('#xm-side');if(e)e.innerHTML=xmlSideHTML()};
+function xmlTabHTML(){const X=PASTE.xml;
+ return `<div class="two"><div class="card pad form">
+ <label class="fld"><span>Tempel XML Preset</span><textarea class="input mono" id="xm-in" rows="14" data-in="xm-text" placeholder="Tempel kode XML di sini…" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">${esc(X.text)}</textarea></label>
+ <div class="muted xs" id="xm-count">${xmCountHTML()}</div><div id="xm-hint">${xmHint()}</div>
+ <div class="row-actions"><button class="btn" data-act="xm-clip">${ic('clipboard',16)}Tempel dari Clipboard</button><button class="btn" data-act="xm-file">${ic('upload',16)}Unggah file XML</button><button class="btn" data-act="xm-pick">${ic('folder',16)}Pilih XML tersimpan</button></div>
+ <div class="row-actions"><button class="btn primary" data-act="xm-validate">${ic('check',16)}Validasi XML</button><button class="btn" data-act="xm-view">${ic('eye',16)}Lihat Isi</button><button class="btn" data-act="xm-copy">${ic('copy',16)}Salin XML</button><button class="btn" data-act="xm-download">${ic('download',16)}Unduh XML</button></div>
+ <div class="row-actions"><button class="btn danger" data-act="xm-clear">${ic('x',16)}Kosongkan</button><button class="btn ghost" data-act="xm-clearall">${ic('trash',16)}Bersihkan Form</button></div></div>
+ <div class="card pad" id="xm-side">${xmlSideHTML()}</div></div>`}
+VIEWS.paste=()=>{const T=PASTE.tab;
+ return `<section class="page"><div class="page-h"><div><h1>Tempel Preset</h1><p class="muted">Simpan link preset atau kode XML ke library tanpa membuat file. Isi input dipertahankan saat berpindah tab atau halaman (selama aplikasi terbuka).</p></div></div>
+ <div class="seg big" role="tablist" aria-label="Jenis input" style="align-self:flex-start"><button role="tab" aria-selected="${T==='link'}" class="${T==='link'?'on':''}" data-act="paste-tab" data-v="link">${ic('link',16)}Tempel Link Preset</button><button role="tab" aria-selected="${T==='xml'}" class="${T==='xml'?'on':''}" data-act="paste-tab" data-v="xml">${ic('code',16)}Tempel XML</button></div>
+ ${T==='link'?linkTabHTML():xmlTabHTML()}</section>`};
+const rerenderPaste=()=>{if(S.route.name==='paste')render()};
+function viewXmlInfo(info,title){openModal({title,wide:true,body:xmlInfoHTML(info)+`<h3 style="margin:14px 0 6px">Struktur elemen</h3><pre class="pre-out">${esc(info.outline)}</pre><p class="muted xs" style="margin-top:6px">${info.trunc?'Menampilkan 300 elemen pertama. ':''}Ditampilkan sebagai teks ringkasan (bukan markup yang dirender).</p>`,actions:[{label:'Tutup',cls:'primary'}]})}
+function viewXmlText(text,title){const r=parseXmlSafe(text);
+ if(r.ok){viewXmlInfo(xmlSummary(r.doc),title);return}
+ openModal({title,wide:true,body:`<div class="notice bad">${ic('alert',18)}<div><b>XML tidak dapat diurai</b>${r.line?` — baris ${r.line}, kolom ${r.col}`:''}<br><span class="sm">${esc(r.err)}</span></div></div><h3 style="margin:14px 0 6px">Teks mentah (maks. 3.000 karakter pertama)</h3><pre class="pre-out">${esc(text.slice(0,3000))}</pre>`,actions:[{label:'Tutup',cls:'primary'}]})}
+function validateXml(quiet){
+ const X=PASTE.xml;if(!X.text.trim()){if(!quiet)toast('Tempel XML terlebih dahulu.','warn');return null}
+ const r=parseXmlSafe(X.text);
+ if(!r.ok){X.vstate='invalid';X.err=r.err;X.line=r.line||null;X.col=r.col||null;X.info=null;renderXmlSide();if(!quiet)toast('XML tidak valid'+(r.line?` (baris ${r.line}, kolom ${r.col})`:'')+'. Lihat panel hasil.','error');return null}
+ X.vstate='valid';X.err='';X.line=X.col=null;X.info=xmlSummary(r.doc);renderXmlSide();
+ if(!quiet)toast('Sintaks XML valid.'+(X.info.recognized?'':' Struktur belum dikenali — akan disimpan sebagai XML generik.'),'success');return r}
+function setXmlText(t,opts={}){const X=PASTE.xml;X.text=t;X.vstate='idle';X.info=null;X.err='';X.savedId=null;if(opts.name&&!X.name)X.name=opts.name.slice(0,80);PASTE.tab='xml';rerenderPaste()}
+const xmlUnsaved=()=>{const X=PASTE.xml;return !!X.text.trim()&&!(X.savedId&&byId(X.savedId))};
+const confirmReplaceXml=()=>xmlUnsaved()?confirmBox('Ganti isi editor?','Isi XML yang belum disimpan akan diganti.','Ganti',true):Promise.resolve(true);
+async function loadXmlFile(f){
+ if(!f)return;
+ if(extOf(f.name)!=='xml'){toast('Pilih file berekstensi .xml.','error');return}
+ if(!f.size){toast('File kosong (0 byte).','error');return}
+ if(f.size>MAX_XML_BYTES){toast(`File terlalu besar (${fmtSize(f.size)}). Maks. ${fmtSize(MAX_XML_BYTES)}.`,'error');return}
+ if(!await confirmReplaceXml())return;
+ let t;try{t=await f.text()}catch(e){toast('Gagal membaca file: '+(e&&e.message||e),'error');return}
+ if(t.length>MAX_XML_CHARS){toast('Isi file melebihi batas karakter.','error');return}
+ setXmlText(t,{name:f.name.replace(/\.xml$/i,'')});toast(`File "${f.name}" dimuat ke editor (${fmtSize(f.size)}). Belum disimpan ke library.`,'success')}
+async function saveXmlPreset(){
+ const X=PASTE.xml;if(!X.text.trim()){toast('Tempel XML terlebih dahulu.','warn');return}
+ const r=validateXml(true);if(!r){toast('XML tidak valid — tidak dapat disimpan sebagai preset. Perbaiki dulu isinya.','error');return}
+ const info=X.info,name=(X.name.trim()||info.meta.name||info.meta.title||'XML Tempelan').slice(0,80);
+ const id=uid(),blob=new Blob([X.text],{type:'application/xml'});
+ try{await DB.put(id+':main',blob)}catch(e){toast(isQuota(e)?'Penyimpanan penuh. Hapus beberapa file lalu coba lagi.':'Gagal menyimpan XML: '+(e&&e.message||e),'error');return}
+ const p=sanitizePreset({id,name,creator:X.creator.trim()||null,category:X.cat,description:X.desc,tags:parseTags(X.tags),ext:'xml',fileName:safeName(name)+'.xml',size:blob.size,added:Date.now(),kind:'xml',hasMain:true});
+ if(!p){await DB.del(id+':main').catch(()=>{});toast('Data preset tidak valid.','error');return}
+ S.presets.unshift(p);if(!savePresets()){S.presets.shift();await DB.del(id+':main').catch(()=>{});return}
+ X.savedId=id;renderXmlSide();updateNav();
+ toast(DB.ok?`XML disimpan ke library (${fmtSize(blob.size)}).`:'XML disimpan, tetapi penyimpanan permanen tidak tersedia — hanya bertahan selama tab terbuka.',DB.ok?'success':'warn')}
+async function saveLinkPreset(){
+ const L=PASTE.link,c=classifyLink(L.text);
+ if(c.state==='empty'){toast('Tempel tautan terlebih dahulu.','warn');return}
+ if(c.state!=='ok'){toast('Tautan belum valid: '+c.reason,'error');return}
+ const dup=S.presets.find(p=>p.kind==='link'&&p.sourceUrl===c.raw&&p.id!==L.savedId);
+ if(dup&&!await confirmBox('Link sudah tersimpan',`Link ini sudah ada di library sebagai "${dup.name}". Simpan sebagai item baru?`,'Simpan lagi'))return;
+ const name=(L.name.trim()||L.title||(c.type==='alight-share'?'Link Berbagi Alight Motion':c.host)).slice(0,80);
+ const p=sanitizePreset({id:uid(),name,category:L.cat,description:L.desc,tags:parseTags(L.tags),kind:'link',sourceUrl:c.raw,linkType:c.type,pageTitle:L.tstate==='ok'?L.title:null,added:Date.now()});
+ if(!p){toast('Data preset tidak valid.','error');return}
+ S.presets.unshift(p);if(!savePresets()){S.presets.shift();return}
+ L.savedId=p.id;renderLinkRes();updateNav();toast('Link disimpan ke library sebagai referensi (belum diimpor ke Alight Motion).','success')}
+async function checkLink(){
+ const L=PASTE.link,c=classifyLink(L.text);
+ if(c.state==='empty'){toast('Tempel tautan terlebih dahulu.','warn');return}
+ if(c.state!=='ok'){renderLinkRes();toast('Tautan tidak valid: '+c.reason,'error');return}
+ const tok=L.tok=Symbol('chk');L.tstate='loading';renderLinkRes();
+ const r=await fetchTitle(c.raw);
+ if(L.tok!==tok)return;
+ if(r.ok){L.tstate='ok';L.title=r.title;L.treason='';toast('Judul halaman berhasil dibaca.','success')}
+ else{L.tstate='fail';L.title=null;L.treason=r.reason;toast(c.type==='alight-share'?'Metadata otomatis tidak tersedia di browser ini. Link tetap bisa dibuka dan disimpan.':'Halaman tidak dapat dibaca browser. Link tetap bisa dibuka atau disimpan.','warn')}
+ renderLinkRes()}
+function pasteDownloadXml(){
+ const X=PASTE.xml;if(!X.text.trim()){toast('Tidak ada XML untuk diunduh.','warn');return}
+ const blob=new Blob([X.text],{type:'application/xml'}),u=URL.createObjectURL(blob),a=document.createElement('a'),
+  name=safeName(X.name.trim()||(X.info&&(X.info.meta.name||X.info.meta.title))||'preset-xml')+'.xml';
+ a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),8000);
+ toast(`Unduhan "${name}" dimulai (${fmtSize(blob.size)}).`+(X.vstate==='valid'?'':' XML belum divalidasi, file tetap berisi teks apa adanya.'),X.vstate==='valid'?'success':'warn')}
+
+/* ----- File Manager ----- */
+const FTYPES=['all','video','image','audio','xml','zip','project','other','link','demo'];
+function statusOf(p){const s=S.files.status[p.id];if(s)return s;if(p.demo)return{c:'mu',t:'Data demo (tanpa file)'};if(p.kind==='link'&&!p.hasMain)return{c:'mu',t:'Tautan (tanpa file)'};if(!p.hasMain&&!p.fileName)return{c:'mu',t:'Tanpa file'};return{c:'mu',t:'Belum diperiksa'}}
+const stHTML=p=>{const s=statusOf(p);return `<span class="st ${s.c}" id="st-${p.id}">${s.c==='ok'?ic('check',12):s.c==='bad'?ic('alert',12):''}${esc(s.t)}</span>`};
+VIEWS.files=()=>{const F=S.files;let l=S.presets.filter(p=>F.type==='all'||groupOfPreset(p)===F.type);
+ l.sort({new:(a,b)=>b.added-a.added,old:(a,b)=>a.added-b.added,name:(a,b)=>a.name.localeCompare(b.name,'id'),size:(a,b)=>(b.size||0)-(a.size||0),type:(a,b)=>groupOfPreset(a).localeCompare(groupOfPreset(b))}[F.sort]);
+ const total=S.presets.reduce((n,p)=>n+(p.size||0),0);
+ return `<section class="page"><div class="page-h"><div><h1>File Manager</h1><p class="muted">${S.presets.length} entri · total file tercatat ${fmtSize(total)}</p></div><div class="row-actions"><button class="btn" data-act="fm-checkall">${ic('refresh',16)}Periksa semua</button></div></div>
+ <div class="notice">${ic('info',18)}<div>File disimpan di penyimpanan browser (IndexedDB) dan dapat terhapus jika pengguna atau sistem membersihkan data situs${DB.ok?'':' — <b>penyimpanan permanen tidak tersedia, file hanya bertahan selama tab terbuka</b>'}.</div></div>
+ <div class="card filters"><label class="fld"><span>Tipe</span><select class="input" data-in="fm-type">${FTYPES.map(t=>`<option value="${t}" ${F.type===t?'selected':''}>${t==='all'?'Semua tipe':GROUP_LABEL[t]}</option>`).join('')}</select></label><label class="fld"><span>Urutkan</span><select class="input" data-in="fm-sort">${[['new','Terbaru'],['old','Terlama'],['name','Nama'],['size','Ukuran'],['type','Tipe']].map(([v,t])=>`<option value="${v}" ${F.sort===v?'selected':''}>${t}</option>`).join('')}</select></label></div>
+ ${l.length?`<div class="card tablewrap"><table class="ftable"><thead><tr><th>Nama tampilan</th><th>Tipe</th><th>Ukuran</th><th>Ditambahkan</th><th>Status</th><th></th></tr></thead><tbody>${l.map(p=>`<tr><td class="nm" data-l="Nama"><b>${esc(p.name)}</b>${p.fileName?`<div class="muted xs">${esc(p.fileName)}</div>`:''}</td><td data-l="Tipe">${esc(GROUP_LABEL[groupOfPreset(p)])}${p.ext?` · ${esc(p.ext.toUpperCase())}`:''}<div class="muted xs">Sumber: ${esc(sourceLabel(p))}</div></td><td data-l="Ukuran">${p.size!=null?fmtSize(p.size):'—'}</td><td data-l="Ditambahkan">${fmtDate(p.added)}</td><td data-l="Status">${stHTML(p)}</td><td><div class="acts"><button class="icon-btn sm" data-act="fm-check" data-id="${p.id}" title="Periksa ketersediaan" aria-label="Periksa">${ic('refresh',15)}</button><button class="icon-btn sm" data-act="fm-rename" data-id="${p.id}" title="Ubah nama tampilan" aria-label="Ubah nama">${ic('edit',15)}</button><button class="icon-btn sm" data-act="edit" data-id="${p.id}" title="Edit metadata" aria-label="Edit metadata">${ic('settings',15)}</button><button class="icon-btn sm danger" data-act="del" data-id="${p.id}" title="Hapus" aria-label="Hapus">${ic('trash',15)}</button></div></td></tr>`).join('')}</tbody></table></div>`:emptyState('folder','Tidak ada file','Tidak ada entri yang cocok dengan filter.','<button class="btn primary" data-act="go" data-go="import">Tambah Preset</button>')}</section>`};
+async function checkFile(p,quiet){
+ let s;if(p.demo)s={c:'mu',t:'Data demo (tanpa file)'};else if(!p.hasMain&&!p.fileName)s={c:'mu',t:p.kind==='link'?'Tautan (tanpa file)':'Tanpa file'};
+ else{let ex=false;try{ex=await DB.has(p.id+':main')}catch{}
+  if(ex){s={c:'ok',t:'Tersedia'};if(!p.hasMain){p.hasMain=true}}else{s={c:'bad',t:'File tidak ditemukan'};p.hasMain=false;if(await DB.has(p.id+':prev').catch(()=>false)===false)p.hasPrev=false}}
+ S.files.status[p.id]=s;const el=$('#st-'+p.id);if(el)el.outerHTML=stHTML(p);if(!quiet&&s.c==='bad')toast(`File "${p.name}" tidak ditemukan.`,'warn');return s}
+
+/* ----- Settings ----- */
+const swRow=(t,d,key,val)=>`<div class="set-row"><div class="t"><b>${t}</b><span class="muted sm">${d}</span></div><div class="ctl"><label class="switch"><input type="checkbox" data-in="set" data-key="${key}" data-type="bool" ${val?'checked':''} aria-label="${esc(t)}"><span></span></label></div></div>`;
+VIEWS.settings=()=>{const s=S.settings;
+ return `<section class="page"><div class="page-h"><div><h1>Settings</h1><p class="muted">Pengaturan disimpan di perangkat ini.</p></div></div>
+ <div class="two"><div class="card pad"><h2>Tampilan</h2>
+  <div class="set-row"><div class="t"><b>Tema</b><span class="muted sm">Mode gelap atau terang</span></div><div class="ctl"><div class="seg"><button class="${s.theme==='dark'?'on':''}" data-act="set-theme" data-v="dark">${ic('moon',16)}&nbsp;Gelap</button><button class="${s.theme==='light'?'on':''}" data-act="set-theme" data-v="light">${ic('sun',16)}&nbsp;Terang</button></div></div></div>
+  <div class="set-row"><div class="t"><b>Warna aksen</b></div><div class="ctl">${[['violet','linear-gradient(135deg,#8b5cf6,#38bdf8)'],['blue','linear-gradient(135deg,#3b82f6,#22d3ee)'],['pink','linear-gradient(135deg,#ec4899,#8b5cf6)'],['green','linear-gradient(135deg,#10b981,#38bdf8)'],['orange','linear-gradient(135deg,#f59e0b,#ef4444)']].map(([k,g])=>`<button class="sw-color ${s.accent===k?'on':''}" style="background:${g}" data-act="set-accent" data-v="${k}" aria-label="Aksen ${k}" title="${k}"></button>`).join('')}</div></div>
+  <div class="set-row"><div class="t"><b>Ukuran grid</b><span class="muted sm">Lebar kartu preset</span></div><div class="ctl"><div class="seg">${[['s','Kecil'],['m','Sedang'],['l','Besar']].map(([k,t])=>`<button class="${s.grid===k?'on':''}" data-act="set-grid" data-v="${k}">${t}</button>`).join('')}</div></div></div>
+  ${swRow('Animasi','Transisi dan efek gerak antarmuka','anim',s.anim)}</div>
+ <div class="card pad"><h2>Player</h2>${swRow('Putar otomatis','Mulai preview saat Player dibuka (bisa diblokir browser)','autoplay',s.autoplay)}
+  <div class="set-row"><div class="t"><b>Volume default</b></div><div class="ctl" style="width:180px"><input type="range" min="0" max="100" value="${Math.round(s.volume*100)}" data-in="set" data-key="volume" data-type="vol" aria-label="Volume default"></div></div>
+  <div class="set-row"><div class="t"><b>Kecepatan default</b></div><div class="ctl"><select class="input" style="width:auto" data-in="set" data-key="speed" data-type="num">${[0.25,0.5,1,1.5,2].map(v=>`<option value="${v}" ${s.speed===v?'selected':''}>${v}x</option>`).join('')}</select></div></div>
+  ${swRow('Ulangi antrean','Kembali ke awal setelah item terakhir','repeatQueue',s.repeatQueue)}</div></div>
+ <div class="card pad"><h2>Penyimpanan &amp; data</h2><p class="muted sm" id="storage-info">Menghitung penggunaan penyimpanan…</p>
+  <div class="notice" style="margin:12px 0">${ic('info',18)}<div><b>Ekspor metadata</b> hanya berisi data preset (nama, kategori, tag, dll.) — <b>bukan</b> file preset/preview dan bukan backup lengkap. Unduh file lewat halaman detail jika ingin menyimpannya secara terpisah.</div></div>
+  <div class="row-actions"><button class="btn" data-act="set-export">${ic('download',16)}Ekspor metadata (JSON)</button><button class="btn" data-act="set-importjson">${ic('upload',16)}Impor metadata (JSON)</button><button class="btn" data-act="set-persist">Minta penyimpanan permanen</button><button class="btn" data-act="set-demo">Muat data demo</button></div>
+  <div class="row-actions" style="margin-top:12px"><button class="btn danger" data-act="set-reset">Reset pengaturan</button><button class="btn danger" data-act="set-clear">${ic('trash',16)}Hapus seluruh data</button></div></div></section>`};
+AFTER.settings=()=>{const el=$('#storage-info');if(!el)return;const n=S.presets.length,files=S.presets.filter(p=>p.hasMain).length;
+ const base=`${n} entri preset, ${files} dengan file tersimpan. Penyimpanan file: ${DB.ok?'IndexedDB (permanen selama data situs tidak dihapus)':'sementara (hilang saat tab ditutup)'}.`;
+ if(navigator.storage&&navigator.storage.estimate)navigator.storage.estimate().then(e=>{el.textContent=`${base} Terpakai ${fmtSize(e.usage||0)} dari kuota sekitar ${fmtSize(e.quota||0)}.`}).catch(()=>{el.textContent=base});else el.textContent=base};
+function exportMeta(){try{const d={app:'ALIGHT MOTION PRESET PLAYER PRO',type:'metadata',version:1,exportedAt:new Date().toISOString(),note:'Hanya metadata. File preset/preview tidak disertakan.',presets:S.presets,settings:S.settings};
+ const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='alight-preset-metadata-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);toast(`Metadata ${S.presets.length} preset diekspor (tanpa file).`,'success')}catch(e){toast('Gagal mengekspor metadata: '+(e&&e.message||e),'error')}}
+async function importMetaFile(f){
+ if(!f)return;if(f.size>10*1024*1024){toast('File JSON terlalu besar (maks. 10 MB).','error');return}
+ let d;try{d=JSON.parse(await f.text())}catch{toast('File bukan JSON yang valid.','error');return}
+ const arr=d&&Array.isArray(d.presets)?d.presets:null;if(!arr||arr.length>5000){toast('Format tidak dikenali: properti "presets" tidak ditemukan atau terlalu banyak.','error');return}
+ let add=0,skip=0,bad=0;const have=new Set(S.presets.map(p=>p.id));
+ for(const o of arr){const p=sanitizePreset(o);if(!p){bad++;continue}if(have.has(p.id)){skip++;continue}
+  p.hasMain=p.hasMain&&await DB.has(p.id+':main').catch(()=>false);p.hasPrev=p.hasPrev&&await DB.has(p.id+':prev').catch(()=>false);p.hasThumb=p.hasThumb&&await DB.has(p.id+':thumb').catch(()=>false);
+  S.presets.push(p);have.add(p.id);add++}
+ savePresets();updateNav();toast(`Impor selesai: ${add} ditambahkan, ${skip} sudah ada, ${bad} tidak valid. Pengaturan tidak diubah; file tidak ikut diimpor.`,add?'success':'warn');if(S.route.name==='settings'||S.route.name==='library')render()}
+
+/* ----- About ----- */
+VIEWS.about=()=>`<section class="page"><div class="page-h"><div><h1>About</h1><p class="muted">Discover • Preview • Organize • Create</p></div></div>
+ <div class="two"><div class="card pad" style="display:flex;flex-direction:column;gap:10px"><h2>ALIGHT MOTION PRESET PLAYER PRO</h2><p>Aplikasi web satu file untuk menyimpan, memberi label, dan mempratinjau koleksi preset Alight Motion langsung di browser. Semua data tersimpan lokal di perangkatmu.</p>
+  <h3>Batasan yang perlu diketahui</h3><ul class="steps"><li>Aplikasi ini <b>tidak</b> merender proyek/preset native Alight Motion. Untuk file XML/ZIP/proyek, yang diputar adalah video atau gambar preview yang kamu sertakan.</li><li>Data tersimpan di browser dan dapat terhapus jika data situs dibersihkan. Ekspor metadata bukan backup file lengkap.</li><li>Berbagi link preset, sinkronisasi antar perangkat, akun, dan katalog online memerlukan backend — belum tersedia di versi ini.</li><li>Pemindai QR via kamera butuh HTTPS/localhost; tanpa BarcodeDetector bawaan browser, library jsQR dimuat dari internet.</li><li>MOV/HEVC tergantung dukungan codec browser.</li><li><b>Tempel Preset:</b> link berbagi Alight Motion hanya disimpan dan dibuka di tab baru — impor dilakukan di halaman resmi/aplikasi Alight Motion, bukan oleh aplikasi ini. Judul halaman hanya bisa dibaca jika situs tujuan mengizinkan akses dari browser (CORS); jika tidak, judul ditandai belum dapat dibaca.</li><li>XML yang ditempel hanya diperiksa sintaksnya (DOMParser) dan tidak pernah dijalankan. XML yang valid tidak otomatis berarti preset Alight Motion yang siap diimpor.</li><li>Selain pemindai QR (opsional), aplikasi berjalan offline setelah dimuat.</li></ul></div>
+ <div class="card pad"><h2>Pintasan keyboard</h2><div class="klist" style="margin-top:12px">${shortcutsHTML()}</div><h3 style="margin-top:18px">Privasi</h3><p class="muted sm">File dan metadata tidak dikirim ke server. Tidak ada API key di kode. Nama file, deskripsi, dan data impor diperlakukan sebagai data tidak tepercaya, dan isi file tidak pernah dijalankan.</p></div></div></section>`;
+const shortcutsHTML=()=>[['Space','Putar / jeda preview'],['F','Layar penuh'],['←  /  →','Mundur / maju 5 detik'],['M','Bisukan / suarakan'],['Esc','Tutup dialog / keluar layar penuh'],['?','Tampilkan bantuan ini']].map(([k,t])=>`<div><span>${t}</span><span class="kbd">${k}</span></div>`).join('');
+
+/* ============ actions ============ */
+const A={
+ go:el=>go(el.dataset.go),
+ /* tempel preset */
+ 'paste-tab':el=>{PASTE.tab=el.dataset.v==='xml'?'xml':'link';render()},
+ 'lk-clip':async()=>{const t=await readClip();if(t==null)return;const L=PASTE.link;L.text=t.trim();L.tstate='idle';L.title=null;L.treason='';L.tok=null;const i=$('#lk-in');if(i)i.value=L.text;renderLinkRes();const h=$('#lk-hint');if(h)h.innerHTML=lkHint();toast('Teks ditempel dari clipboard.','success')},
+ 'lk-check':()=>checkLink(),
+ 'lk-open':()=>{const c=classifyLink(PASTE.link.text);if(c.state==='empty'){toast('Tempel tautan terlebih dahulu.','warn');return}return openLinkSafe(PASTE.link.text)},
+ 'lk-copy':async()=>{const t=PASTE.link.text.trim();if(!t){toast('Tidak ada tautan untuk disalin.','warn');return}const ok=await copyText(t);toast(ok?'Link disalin.':'Tidak dapat menyalin. Salin manual dari kolom.',ok?'success':'error')},
+ 'lk-save':()=>saveLinkPreset(),
+ 'lk-detail':()=>{if(PASTE.link.savedId)go('detail/'+PASTE.link.savedId)},
+ 'lk-clear':async()=>{const L=PASTE.link,has=L.text.trim()||L.name||L.desc||L.tags;const saved=L.savedId&&byId(L.savedId);if(has&&!saved&&!await confirmBox('Bersihkan form?','Tautan dan isian yang belum disimpan akan dihapus.','Bersihkan',true))return;Object.assign(L,{text:'',tstate:'idle',title:null,treason:'',tok:null,name:'',cat:'Custom Preset',desc:'',tags:'',savedId:null});render()},
+ 'lk-toxml':()=>{const X=PASTE.xml;X.text=PASTE.link.text;X.vstate='idle';X.info=null;X.err='';X.savedId=null;PASTE.link.text='';PASTE.link.tstate='idle';PASTE.tab='xml';render()},
+ 'xm-tolink':()=>{const L=PASTE.link;L.text=PASTE.xml.text.trim();L.tstate='idle';L.title=null;L.savedId=null;PASTE.xml.text='';PASTE.xml.vstate='idle';PASTE.xml.info=null;PASTE.tab='link';render()},
+ 'xm-clip':async()=>{const t=await readClip();if(t==null)return;if(t.length>MAX_XML_CHARS){toast('Isi clipboard melebihi batas karakter.','error');return}if(!await confirmReplaceXml())return;setXmlText(t);toast('Teks ditempel dari clipboard.','success')},
+ 'xm-file':()=>{$('#f-xml').value='';$('#f-xml').click()},
+ 'xm-pick':()=>{const items=S.presets.filter(p=>p.hasMain&&p.ext==='xml');if(!items.length){toast('Belum ada file XML tersimpan di library.','info');return}
+  openModal({title:'Pilih XML tersimpan',body:`<p class="muted sm" style="margin-bottom:10px">Isi dimuat ke editor. Item asli tidak diubah; menyimpan akan membuat item baru.</p><div class="plist">${items.map(p=>`<button class="btn" style="justify-content:space-between;width:100%" data-act="xm-load" data-id="${p.id}"><span style="overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</span><span class="muted xs">${fmtSize(p.size)}</span></button>`).join('')}</div>`})},
+ 'xm-load':async el=>{const p=byId(el.dataset.id);if(!p)return;let b=null;try{b=await DB.get(p.id+':main')}catch{}
+  if(!b){toast('File tidak ditemukan di penyimpanan browser.','error');return}
+  if(b.size>MAX_XML_BYTES){toast('File terlalu besar untuk editor (maks. '+fmtSize(MAX_XML_BYTES)+').','error');return}
+  if(!await confirmReplaceXml())return;const t=await b.text();closeAllModals();setXmlText(t);toast(`"${p.name}" dimuat ke editor.`,'success')},
+ 'xm-validate':()=>{validateXml(false)},
+ 'xm-view':()=>{const X=PASTE.xml;if(!X.text.trim()){toast('Tempel XML terlebih dahulu.','warn');return}const r=validateXml(true);if(!r){toast('XML tidak valid — lihat pesan di panel hasil.','error');return}viewXmlInfo(X.info,'Isi XML (ringkasan)')},
+ 'xm-copy':async()=>{const t=PASTE.xml.text;if(!t.trim()){toast('Tidak ada XML untuk disalin.','warn');return}const ok=await copyText(t);toast(ok?'XML disalin.':'Tidak dapat menyalin. Salin manual dari kolom.',ok?'success':'error')},
+ 'xm-download':()=>pasteDownloadXml(),
+ 'xm-save':()=>saveXmlPreset(),
+ 'xm-detail':()=>{if(PASTE.xml.savedId)go('detail/'+PASTE.xml.savedId)},
+ 'xm-clear':async()=>{const X=PASTE.xml;if(!X.text.trim()){toast('Editor sudah kosong.','info');return}if(xmlUnsaved()&&!await confirmBox('Kosongkan XML?','Isi XML yang belum disimpan akan hilang.','Kosongkan',true))return;X.text='';X.vstate='idle';X.info=null;X.err='';X.savedId=null;render()},
+ 'xm-clearall':async()=>{const X=PASTE.xml,has=X.text.trim()||X.name||X.desc||X.tags||X.creator;if(has&&!(X.savedId&&byId(X.savedId))&&!await confirmBox('Bersihkan form?','XML dan isian metadata yang belum disimpan akan dihapus.','Bersihkan',true))return;Object.assign(X,{text:'',vstate:'idle',err:'',line:null,col:null,info:null,name:'',cat:'XML Preset',creator:'',desc:'',tags:'',savedId:null});render()},
+ 'xml-view':async el=>{const p=byId(el.dataset.id);if(!p)return;let b=null;try{b=await DB.get(p.id+':main')}catch{}if(!b){toast('File tidak ditemukan di penyimpanan browser.','error');return}if(b.size>MAX_XML_BYTES){toast('File terlalu besar untuk ditampilkan.','error');return}viewXmlText(await b.text(),'Isi XML: '+p.name)},
+ 'copy-src':async el=>{const p=byId(el.dataset.id);if(!p||!p.sourceUrl)return;const ok=await copyText(p.sourceUrl);toast(ok?'Link sumber disalin.':'Tidak dapat menyalin link sumber.',ok?'success':'error')},
+ back:()=>{if(S.depth>0){S.depth--;history.back()}else go('library')},
+ detail:el=>go('detail/'+el.dataset.id),
+ play:el=>{const p=byId(el.dataset.id);if(p&&!previewKey(p))toast(`Preview "${p.name}" belum tersedia — halaman player menampilkan keterangannya.`,'info');openPlayer(el.dataset.id)},
+ fav:el=>{const p=byId(el.dataset.id);if(!p)return;p.fav=!p.fav;if(savePresets())toast(p.fav?`"${p.name}" ditambahkan ke favorit.`:`"${p.name}" dihapus dari favorit.`,'success');updateNav();refresh()},
+ qadd:el=>{const p=byId(el.dataset.id);if(!p)return;if(S.queue.includes(p.id)){toast(`"${p.name}" sudah ada di antrean.`,'info');return}S.queue.push(p.id);saveLists();updateNav();toast(`"${p.name}" ditambahkan ke antrean (${S.queue.length}).`,'success');if(S.route.name==='player')render()},
+ qrem:el=>{S.queue=S.queue.filter(i=>i!==el.dataset.id);saveLists();updateNav();toast('Dihapus dari antrean.','success');render()},
+ qup:el=>{const i=+el.dataset.i;if(i>0){[S.queue[i-1],S.queue[i]]=[S.queue[i],S.queue[i-1]];saveLists();render()}},
+ qdn:el=>{const i=+el.dataset.i;if(i<S.queue.length-1){[S.queue[i+1],S.queue[i]]=[S.queue[i],S.queue[i+1]];saveLists();render()}},
+ qplay:el=>{const p=byId(el.dataset.id);if(p&&!previewKey(p))toast(`Preview "${p.name}" belum tersedia.`,'warn');openPlayer(el.dataset.id)},
+ qstart:()=>{const p=byId(S.queue[0]);if(!p)return;if(!previewKey(p))toast(`Preview "${p.name}" belum tersedia.`,'warn');openPlayer(p.id)},
+ qrepeat:()=>{S.settings.repeatQueue=!S.settings.repeatQueue;saveSettings();toast(S.settings.repeatQueue?'Ulangi antrean aktif.':'Ulangi antrean nonaktif.','info');render()},
+ qclear:async()=>{if(await confirmBox('Hapus semua antrean?',`${S.queue.length} preset akan dikeluarkan dari antrean (preset tidak dihapus).`,'Hapus antrean',true)){S.queue=[];saveLists();updateNav();toast('Antrean dikosongkan.','success');render()}},
+ edit:el=>{const p=byId(el.dataset.id);if(p)editPreset(p)},
+ del:el=>{const p=byId(el.dataset.id);if(p)deletePreset(p)},
+ dl:el=>{const p=byId(el.dataset.id);if(p)downloadPreset(p)},
+ share:async el=>{const p=byId(el.dataset.id);if(!p)return;const data={title:p.name,text:`Preset ${p.category}: ${p.name}`,url:presetLink(p)};if(navigator.share){try{await navigator.share(data);toast('Dibagikan.','success')}catch(e){if(e&&e.name!=='AbortError')toast('Gagal membagikan: '+e.message,'error')}}else A.copy(el)},
+ copy:async el=>{const p=byId(el.dataset.id);if(!p)return;const ok=await copyText(presetLink(p));toast(ok?'Link disalin (hanya berfungsi di browser/perangkat ini).':'Tidak dapat menyalin link. Salin manual dari bilah alamat.',ok?'success':'error')},
+ cat:el=>{S.lib={...S.lib,cat:el.dataset.cat,page:1,q:''};$('#gsearch').value='';syncSearch();go('library')},
+ 'search-clear':()=>{S.lib.q='';const i=$('#gsearch');i.value='';syncSearch();i.focus();if(S.route.name==='library')renderLibResults()},
+ 'lib-fav':()=>{S.lib.fav=!S.lib.fav;S.lib.page=1;render()},
+ 'lib-view':el=>{S.lib.view=el.dataset.v;render()},
+ 'lib-reset':()=>{S.lib={...S.lib,q:'',cat:'all',fmt:'all',sort:'new',page:1,fav:false};$('#gsearch').value='';syncSearch();if(S.route.name==='library')render();else go('library')},
+ 'lib-more':()=>{S.lib.page++;renderLibResults()},
+ theme:()=>{S.settings.theme=S.settings.theme==='dark'?'light':'dark';saveSettings();applySettings();updateNav();if(S.route.name==='settings')render()},
+ collapse:()=>{S.settings.collapsed=!S.settings.collapsed;saveSettings();applySettings()},
+ more:()=>{const items=NAV.filter(([k])=>!BOTTOM.includes(k));openModal({title:'Menu',sheet:true,body:`<div class="more-grid">${items.map(([k,i])=>`<button data-act="go" data-go="${k}">${ic(i,24)}<span>${ROUTES[k]}</span></button>`).join('')}<button data-act="theme">${ic(S.settings.theme==='dark'?'sun':'moon',24)}<span>Tema</span></button><button data-act="help">${ic('keyboard',24)}<span>Pintasan</span></button></div>`})},
+ help:()=>openModal({title:'Pintasan keyboard',body:`<div class="klist">${shortcutsHTML()}</div><p class="muted xs" style="margin-top:12px">Pintasan tidak aktif saat mengetik di kolom teks.</p>`}),
+ 'fav-clear':async()=>{if(await confirmBox('Hapus semua favorit?','Tanda favorit pada semua preset akan dihapus (preset tidak dihapus).','Hapus favorit',true)){S.presets.forEach(p=>p.fav=false);savePresets();updateNav();toast('Semua favorit dihapus.','success');render()}},
+ 'opened-clear':async()=>{if(await confirmBox('Hapus riwayat dibuka?','Riwayat preset yang dibuka akan dikosongkan.','Hapus',true)){S.opened=[];saveLists();toast('Riwayat dibuka dihapus.','success');render()}},
+ 'played-clear':async()=>{if(await confirmBox('Hapus riwayat preview?','Riwayat preview yang diputar akan dikosongkan.','Hapus',true)){S.played=[];saveLists();toast('Riwayat preview dihapus.','success');render()}},
+ /* player */
+ 'pl-toggle':()=>togglePlay(),'pl-back5':()=>seekBy(-5),'pl-fwd5':()=>seekBy(5),'pl-prev':()=>stepPreset(-1),'pl-next':()=>stepPreset(1),'pl-fs':()=>toggleFS(),
+ 'pl-loop':el=>{S.player.loop=!S.player.loop;if(S.player.v)S.player.v.loop=S.player.loop;el.classList.toggle('on',S.player.loop);toast(S.player.loop?'Ulangi video aktif.':'Ulangi video nonaktif.','info')},
+ 'pl-mute':()=>{const v=S.player.v;if(v)v.muted=!v.muted},
+ 'pl-retry':()=>{const p=byId(S.player.id||S.activeId);if(p){stopPlayer();render()}},
+ /* import */
+ 'imp-pick':e=>{$('#f-import').click()},
+ 'imp-remove':el=>{const s=stById(el.dataset.sid);if(s){freeStaged(s);S.staged=S.staged.filter(x=>x!==s);rerenderStaged()}},
+ 'imp-clear':()=>{S.staged.forEach(freeStaged);S.staged=[];rerenderStaged();toast('Daftar impor dibatalkan.','info')},
+ 'imp-prevpick':el=>{S.prevFor=el.dataset.sid;$('#f-prev').value='';$('#f-prev').click()},
+ 'imp-prevclear':el=>{const s=stById(el.dataset.sid);if(s){s.prev=null;rerenderStaged()}},
+ 'imp-save':()=>saveStaged(),
+ /* qr */
+ 'qr-start':()=>startScan(),'qr-stop':()=>{stopScan();const b=$('#qr-box');if(b)b.innerHTML='<div class="muted sm" style="padding:20px;text-align:center">Kamera dihentikan</div>'},
+ 'qr-pick':()=>{$('#f-qr').value='';$('#f-qr').click()},
+ 'qr-copy':async()=>{const ok=await copyText(S.qr.result||'');toast(ok?'Teks disalin.':'Tidak dapat menyalin.',ok?'success':'error')},
+ 'qr-open':async()=>{const a=assessUrl(S.qr.result||'');if(a.kind!=='url')return;const msg=a.warnings.length?'Tautan ini memiliki peringatan:\n• '+a.warnings.join('\n• ')+'\nTetap buka?':`Buka ${a.host} di tab baru?`;if(await confirmBox('Buka tautan?',msg,'Buka',a.warnings.length>0)){window.open(a.url,'_blank','noopener,noreferrer');toast('Tautan dibuka di tab baru.','info')}},
+ 'qr-save':()=>saveQRPreset(),'qr-clear':()=>{S.qr.result=null;const e=$('#qr-res');if(e)e.innerHTML=''},
+ 'qr-check':()=>{const v=($('#qr-manual').value||'').trim();if(!v){toast('Masukkan tautan terlebih dahulu.','warn');return}setQR(v)},
+ /* files */
+ 'fm-check':async el=>{const p=byId(el.dataset.id);if(p){const s=await checkFile(p);savePresets();if(s.c==='ok')toast(`"${p.name}" tersedia.`,'success')}},
+ 'fm-checkall':async()=>{let bad=0;for(const p of S.presets){const s=await checkFile(p,true);if(s.c==='bad')bad++}savePresets();toast(bad?`${bad} file tidak ditemukan.`:'Pemeriksaan selesai: semua file tercatat tersedia.',bad?'warn':'success')},
+ 'fm-rename':el=>{const p=byId(el.dataset.id);if(!p)return;openModal({title:'Ubah nama tampilan',body:`<label class="fld"><span>Nama tampilan</span><input class="input" id="rn" maxlength="80" value="${esc(p.name)}"></label><p class="err" id="rn-e"></p><p class="muted xs">Nama file asli tidak berubah.</p>`,actions:[{label:'Batal'},{label:'Simpan',cls:'primary',run:w=>{const v=$('#rn',w).value.trim();if(!v){$('#rn-e',w).textContent='Nama tidak boleh kosong.';return false}p.name=v.slice(0,80);savePresets();toast('Nama tampilan disimpan.','success');render()}}]})},
+ /* settings */
+ 'set-theme':el=>{S.settings.theme=el.dataset.v;saveSettings();applySettings();updateNav();render()},
+ 'set-accent':el=>{S.settings.accent=el.dataset.v;saveSettings();applySettings();render()},
+ 'set-grid':el=>{S.settings.grid=el.dataset.v;saveSettings();applySettings();render()},
+ 'set-export':()=>exportMeta(),'set-importjson':()=>{$('#f-json').value='';$('#f-json').click()},
+ 'set-persist':async()=>{if(!navigator.storage||!navigator.storage.persist){toast('Browser tidak mendukung penyimpanan permanen.','warn');return}try{const ok=await navigator.storage.persist();toast(ok?'Penyimpanan permanen diberikan.':'Browser tidak memberikan penyimpanan permanen.',ok?'success':'warn')}catch(e){toast('Gagal meminta penyimpanan permanen.','error')}},
+ 'set-demo':()=>{const have=new Set(S.presets.filter(p=>p.demo).map(p=>p.name));const add=seedDemo().filter(p=>!have.has(p.name));S.presets.push(...add);savePresets();updateNav();toast(add.length?`${add.length} data demo dimuat.`:'Semua data demo sudah ada.',add.length?'success':'info');render()},
+ 'set-reset':async()=>{if(await confirmBox('Reset pengaturan?','Semua pengaturan kembali ke bawaan. Preset tidak dihapus.','Reset',true)){S.settings={...DEFAULTS};saveSettings();applySettings();updateNav();toast('Pengaturan direset.','success');render()}},
+ 'set-clear':async()=>{if(!await confirmBox('Hapus seluruh data?','Semua preset, file, favorit, riwayat, antrean, dan pengaturan di browser ini akan dihapus permanen. Ekspor metadata dulu jika perlu. Tindakan ini tidak dapat dibatalkan.','Hapus semuanya',true))return;
+  try{await DB.clear();for(const k of[...URLS.keys()])dropURL(k);['presets','settings','opened','played','queue'].forEach(LS.del);LS.set('seeded',true);toast('Seluruh data dihapus. Memuat ulang…','success');setTimeout(()=>{location.hash='#/home';location.reload()},900)}catch(e){toast('Gagal menghapus data: '+(e&&e.message||e),'error')}}
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;if(el.disabled)return;const fn=A[el.dataset.act];if(!fn)return;if(el.tagName==='A')e.preventDefault();
+ if(el.closest('.modal-wrap')&&['go','theme','help'].includes(el.dataset.act)&&el.closest('.more-grid')){const m=modalStack[modalStack.length-1];m&&m.close()}
+ try{const r=fn(el,e);if(r&&r.catch)r.catch(err=>{console.error(err);toast('Terjadi kesalahan: '+(err&&err.message||err),'error')})}catch(err){console.error(err);toast('Terjadi kesalahan: '+(err&&err.message||err),'error')}});
+
+/* ============ input handlers ============ */
+const updXmCount=()=>{const e=$('#xm-count');if(e)e.innerHTML=xmCountHTML()};
+const IN={
+ 'lk-text':el=>{const L=PASTE.link;L.text=el.value;L.tstate='idle';L.title=null;L.treason='';L.tok=null;if(L.savedId){const s=byId(L.savedId);if(!s||s.sourceUrl!==classifyLink(L.text).raw)L.savedId=null}renderLinkRes();const h=$('#lk-hint');if(h)h.innerHTML=lkHint()},
+ plf:el=>{if(['name','cat','desc','tags'].includes(el.dataset.f))PASTE.link[el.dataset.f]=el.value},
+ 'xm-text':el=>{const X=PASTE.xml,prevLen=X.text.length,was=X.vstate+'|'+(X.savedId||'');X.text=el.value;X.vstate='idle';X.info=null;X.err='';X.savedId=null;updXmCount();const h=$('#xm-hint');if(h)h.innerHTML=xmHint();if(was!=='idle|'||(!prevLen)!==(!X.text.length))renderXmlSide()},
+ pxf:el=>{if(['name','cat','creator','desc','tags'].includes(el.dataset.f))PASTE.xml[el.dataset.f]=el.value},
+ 'px-file':el=>{const f=el.files[0];el.value='';loadXmlFile(f)},
+ 'lib-cat':el=>{S.lib.cat=el.value;S.lib.page=1;renderLibResults()},'lib-fmt':el=>{S.lib.fmt=el.value;S.lib.page=1;renderLibResults()},'lib-sort':el=>{S.lib.sort=el.value;S.lib.page=1;renderLibResults()},
+ 'fm-type':el=>{S.files.type=el.value;render()},'fm-sort':el=>{S.files.sort=el.value;render()},
+ 'pl-seek':el=>{const v=S.player.v;if(v&&isFinite(v.duration))v.currentTime=el.value/1000*v.duration},
+ 'pl-vol':el=>{const v=S.player.v,x=el.value/100;if(v){v.volume=x;v.muted=x===0}},
+ 'pl-speed':el=>{const v=S.player.v,x=+el.value;if(v)v.playbackRate=x;S.settings.speed=x;saveSettings()},
+ set:el=>{const k=el.dataset.key,t=el.dataset.type;let v;if(t==='bool')v=el.checked;else if(t==='vol')v=el.value/100;else v=+el.value;S.settings[k]=v;saveSettings();applySettings();if(k==='repeatQueue')updateNav()},
+ stg:el=>{const s=stById(el.dataset.sid);if(s)s[el.dataset.f]=el.value},
+ 'imp-files':el=>{const f=[...el.files];el.value='';if(S.route.name!=='import')go('import');if(f.length)addStaged(f)},
+ 'imp-prevfile':el=>{const f=el.files[0],s=stById(S.prevFor);el.value='';if(!f||!s)return;const e=extOf(f.name);if(!['video','image','audio'].includes(groupOf(e))){toast('File preview harus video, gambar, atau audio yang didukung.','error');return}if(f.size>MAX_FILE){toast('File preview terlalu besar (maks. 300 MB).','error');return}s.prev=f;rerenderStaged();toast('File preview ditambahkan.','success');
+  mediaMeta(f,groupOf(e)).then(m=>{if(m&&m.thumb&&!s.thumb&&S.staged.includes(s)){s.thumb=m.thumb;s.thumbUrl=URL.createObjectURL(m.thumb);rerenderStaged()}})},
+ 'set-json':el=>{const f=el.files[0];el.value='';importMetaFile(f)},
+ 'qr-file':el=>{const f=el.files[0];el.value='';scanImageFile(f)}};
+document.addEventListener('input',e=>{const el=e.target.closest&&e.target.closest('[data-in]');if(el&&el.type!=='file'&&IN[el.dataset.in])IN[el.dataset.in](el,e)});
+document.addEventListener('change',e=>{const el=e.target.closest&&e.target.closest('[data-in]');if(el&&el.type==='file'&&IN[el.dataset.in])IN[el.dataset.in](el,e)});
+function syncSearch(){$('#searchbox').classList.toggle('has',!!$('#gsearch').value)}
+$('#gsearch').addEventListener('input',e=>{S.lib.q=e.target.value;S.lib.page=1;syncSearch();if(S.route.name==='library')renderLibResults();else go('library')});
+['dragover','drop'].forEach(ev=>window.addEventListener(ev,e=>{if(e.dataTransfer&&[...(e.dataTransfer.types||[])].includes('Files')){e.preventDefault();if(ev==='drop'&&!e.target.closest('#dropzone')){go('import');const f=[...e.dataTransfer.files];if(f.length)setTimeout(()=>addStaged(f),50)}}}));
+window.addEventListener('hashchange',onRoute);
+
+/* ============ keyboard ============ */
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'){if(modalStack.length){modalStack[modalStack.length-1].close();e.preventDefault()}return}
+ const t=e.target,typing=t.matches&&t.matches('input:not([type=range]):not([type=checkbox]):not([type=file]),textarea,select,[contenteditable]');
+ if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='Enter'&&t.classList&&(t.classList.contains('pcard')||t.classList.contains('prow')||t.classList.contains('hero-f'))){A.detail(t);return}
+ if(e.key==='?'){A.help();return}
+ if(modalStack.length||S.route.name!=='player')return;
+ if(t.type==='range'&&(e.key==='ArrowLeft'||e.key==='ArrowRight'))return;
+ switch(e.key){case' ':e.preventDefault();togglePlay();break;case'ArrowLeft':e.preventDefault();seekBy(-5);break;case'ArrowRight':e.preventDefault();seekBy(5);break;
+  case'f':case'F':toggleFS();break;case'm':case'M':{const v=S.player.v;if(v)v.muted=!v.muted;break}}});
+document.addEventListener('keyup',e=>{if(e.key===' '&&S.route.name==='player'&&!modalStack.length&&e.target.tagName==='BUTTON')e.preventDefault()});
+
+/* ============ init ============ */
+async function init(){
+ S.settings={...DEFAULTS,...(LS.get('settings',{})||{})};
+ const s=S.settings;if(!['dark','light'].includes(s.theme))s.theme='dark';if(!['violet','blue','pink','green','orange'].includes(s.accent))s.accent='violet';if(!['s','m','l'].includes(s.grid))s.grid='m';
+ s.volume=Math.min(1,Math.max(0,+s.volume||0));if(![0.25,0.5,1,1.5,2].includes(+s.speed))s.speed=1;s.speed=+s.speed;
+ let list=LS.get('presets',[]);S.presets=(Array.isArray(list)?list:[]).map(sanitizePreset).filter(Boolean);
+ if(!LS.get('seeded',false)){if(!S.presets.length)S.presets=seedDemo();LS.set('seeded',true);LS.set('presets',S.presets)}
+ const ids=new Set(S.presets.map(p=>p.id)),lst=k=>(Array.isArray(LS.get(k,[]))?LS.get(k,[]):[]);
+ S.opened=lst('opened').filter(o=>o&&ids.has(o.id));S.played=lst('played').filter(o=>o&&ids.has(o.id));S.queue=lst('queue').filter(i=>typeof i==='string'&&ids.has(i));
+ await DB.open();
+ applySettings();buildChrome();syncSearch();
+ S.route=parseHash();render();
+ if(!DB.ok)setTimeout(()=>toast('Penyimpanan file permanen (IndexedDB) tidak tersedia. File yang diimpor hanya bertahan selama tab terbuka.','warn'),1200);
+ setTimeout(()=>$('#boot').classList.add('hide'),350);setTimeout(()=>$('#boot')&&$('#boot').remove(),1000)}
+init().catch(e=>{console.error(e);$('#boot').classList.add('hide');toast('Gagal memulai aplikasi: '+(e&&e.message||e),'error')});
+})();
+</script>
+</body>
+</html>
